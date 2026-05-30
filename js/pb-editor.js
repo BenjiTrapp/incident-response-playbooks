@@ -45,6 +45,7 @@ class PBEditor {
 
     this.selectedId = null;
     this.selectedType = null; // 'process' | 'connection'
+    this.expandedId = null;   // process ID with expanded sub-activities
 
     // Current process being viewed (root of current view)
     this.currentProcessId = null;
@@ -81,6 +82,7 @@ class PBEditor {
 
     this.selectedId = null;
     this.selectedType = null;
+    this.expandedId = null;
     this._renderBreadcrumb();
     this.render();
   }
@@ -100,6 +102,22 @@ class PBEditor {
   getSelectedType() { return this.selectedType; }
 
   selectProcess(id) {
+    // Toggle expansion if clicking the same composite node again
+    if (id && id === this.selectedId) {
+      const proc = this.project && this.project.model.processes[id];
+      if (proc && proc.subProcessIds && proc.subProcessIds.length > 0) {
+        this.expandedId = this.expandedId === id ? null : id;
+      }
+    } else {
+      this.expandedId = null;
+      // Auto-expand if the newly selected node has children
+      if (id && this.project) {
+        const proc = this.project.model.processes[id];
+        if (proc && proc.subProcessIds && proc.subProcessIds.length > 0) {
+          this.expandedId = id;
+        }
+      }
+    }
     this.selectedId = id;
     this.selectedType = id ? 'process' : null;
     this.render();
@@ -175,6 +193,20 @@ class PBEditor {
     const subSet = new Set(proc.subProcessIds);
     const NW = 160, NH = 60;
 
+    // Calculate expansion offset for connection routing
+    const subH = 28, padY = 8;
+    let expandedBottom = -Infinity;
+    let expansionHeight = 0;
+    if (this.expandedId) {
+      const expandedProc = this.project.model.processes[this.expandedId];
+      const expandedPos = view.nodePositions[this.expandedId];
+      if (expandedProc && expandedPos) {
+        const childCount = (expandedProc.subProcessIds || []).length;
+        expansionHeight = childCount * (subH + padY) + padY + 4 + 6;
+        expandedBottom = expandedPos.y + NH;
+      }
+    }
+
     for (const inst of Object.values(this.project.model.artifactStateInstances)) {
       const from = inst.originatingActivity;
       const to = inst.usedByActivity;
@@ -186,9 +218,14 @@ class PBEditor {
       const pos1 = view.nodePositions[from] || { x: 0, y: 0 };
       const pos2 = view.nodePositions[to] || { x: 0, y: 0 };
 
+      // Apply expansion offset
+      let y1Off = 0, y2Off = 0;
+      if (this.expandedId && from !== this.expandedId && pos1.y >= expandedBottom) y1Off = expansionHeight;
+      if (this.expandedId && to !== this.expandedId && pos2.y >= expandedBottom) y2Off = expansionHeight;
+
       // Connect right-center of source to left-center of target
-      const x1 = pos1.x + NW, y1 = pos1.y + NH / 2;
-      const x2 = pos2.x, y2 = pos2.y + NH / 2;
+      const x1 = pos1.x + NW, y1 = pos1.y + y1Off + NH / 2;
+      const x2 = pos2.x, y2 = pos2.y + y2Off + NH / 2;
       const mx = (x1 + x2) / 2;
 
       const isSelected = this.selectedId === inst.id;
@@ -257,11 +294,31 @@ class PBEditor {
     const g = this._svgEl('g');
     g.setAttribute('class', 'pb-activities');
 
+    // Calculate expansion offset: nodes below the expanded node get pushed down
+    const H = 60, subH = 28, padY = 8;
+    let expandedBottom = -Infinity;
+    let expansionHeight = 0;
+
+    if (this.expandedId) {
+      const expandedProc = this.project.model.processes[this.expandedId];
+      const expandedPos = view.nodePositions[this.expandedId];
+      if (expandedProc && expandedPos) {
+        const childCount = (expandedProc.subProcessIds || []).length;
+        expansionHeight = childCount * (subH + padY) + padY + 4 + 6; // panel height + gap
+        expandedBottom = expandedPos.y + H; // bottom of the expanded card
+      }
+    }
+
     for (const subId of proc.subProcessIds) {
       const sub = this.project.model.processes[subId];
       if (!sub) continue;
       const pos = view.nodePositions[subId] || { x: 0, y: 0 };
-      g.appendChild(this._buildActivity(sub, pos.x, pos.y));
+      let renderY = pos.y;
+      // Push nodes down if they are below the expanded card
+      if (this.expandedId && subId !== this.expandedId && pos.y >= expandedBottom) {
+        renderY += expansionHeight;
+      }
+      g.appendChild(this._buildActivity(sub, pos.x, renderY));
     }
 
     this.viewport.appendChild(g);
@@ -346,8 +403,55 @@ class PBEditor {
       badge.setAttribute('x', 8); badge.setAttribute('y', H - 4);
       badge.setAttribute('font-size', '9'); badge.setAttribute('fill', '#546e7a');
       badge.setAttribute('pointer-events', 'none');
-      badge.textContent = `▶ ${childCount} sub-activit${childCount === 1 ? 'y' : 'ies'}`;
+      badge.textContent = `${this.expandedId === proc.id ? '▼' : '▶'} ${childCount} sub-activit${childCount === 1 ? 'y' : 'ies'}`;
       g.appendChild(badge);
+    }
+
+    // Expanded sub-activities panel
+    if (hasChildren && this.expandedId === proc.id) {
+      const subW = 140, subH = 28, padX = 10, padY = 8, startY = H + 6;
+      const panelH = proc.subProcessIds.length * (subH + padY) + padY + 4;
+      // Panel background
+      const panelBg = this._svgEl('rect');
+      panelBg.setAttribute('x', 0); panelBg.setAttribute('y', startY);
+      panelBg.setAttribute('width', W); panelBg.setAttribute('height', panelH);
+      panelBg.setAttribute('rx', 4); panelBg.setAttribute('ry', 4);
+      panelBg.setAttribute('fill', '#0f172a'); panelBg.setAttribute('stroke', '#334155');
+      panelBg.setAttribute('stroke-width', '1'); panelBg.setAttribute('stroke-dasharray', '3,2');
+      g.appendChild(panelBg);
+
+      proc.subProcessIds.forEach((subId, idx) => {
+        const sub = this.project.model.processes[subId];
+        if (!sub) return;
+        const sy = startY + padY + idx * (subH + padY);
+        const sx = padX;
+        // Sub-activity card
+        const sr = this._svgEl('rect');
+        sr.setAttribute('x', sx); sr.setAttribute('y', sy);
+        sr.setAttribute('width', subW); sr.setAttribute('height', subH);
+        sr.setAttribute('rx', 3); sr.setAttribute('ry', 3);
+        sr.setAttribute('fill', sub.status === STATUS_ENUM.COMPLETED ? '#0d2618' : (this.selectedId === subId ? '#1e3a5f' : '#1e293b'));
+        sr.setAttribute('stroke', sub.status === STATUS_ENUM.COMPLETED ? '#2ecc71' : (this.selectedId === subId ? '#c084fc' : '#475569'));
+        sr.setAttribute('stroke-width', this.selectedId === subId ? '2' : '1');
+        sr.setAttribute('data-sub-id', subId);
+        sr.style.cursor = 'pointer';
+        g.appendChild(sr);
+        // Status dot
+        const dot = this._svgEl('circle');
+        dot.setAttribute('cx', sx + 8); dot.setAttribute('cy', sy + subH / 2);
+        dot.setAttribute('r', 3);
+        dot.setAttribute('fill', sub.status === STATUS_ENUM.COMPLETED ? '#2ecc71' : this._statusColor(sub));
+        dot.setAttribute('pointer-events', 'none');
+        g.appendChild(dot);
+        // Sub-activity label
+        const sl = this._svgEl('text');
+        sl.setAttribute('x', sx + 16); sl.setAttribute('y', sy + subH / 2 + 3);
+        sl.setAttribute('font-size', '9'); sl.setAttribute('fill', this.selectedId === subId ? '#e2e8f0' : '#94a3b8');
+        sl.setAttribute('pointer-events', 'none');
+        const sName = sub.name || '(unnamed)';
+        sl.textContent = sName.length > 18 ? sName.substring(0, 16) + '…' : sName;
+        g.appendChild(sl);
+      });
     }
 
     // Output port (right center) - for connection drawing
@@ -546,6 +650,19 @@ class PBEditor {
       return;
     }
 
+    // Check if clicked on a sub-activity card inside expanded panel
+    const subId = this._getSubActivityIdAt(e);
+    if (subId) {
+      e.preventDefault();
+      // Select the sub-activity without collapsing the parent
+      this.selectedId = subId;
+      this.selectedType = 'process';
+      this.render();
+      const sub = this.project.model.processes[subId];
+      if (sub) this.app.onPBNodeSelected(sub);
+      return;
+    }
+
     const nodeId = this._getNodeIdAt(e);
     if (nodeId) {
       e.preventDefault();
@@ -568,6 +685,7 @@ class PBEditor {
       this.svg.style.cursor = 'grabbing';
       this.selectedId = null;
       this.selectedType = null;
+      this.expandedId = null;
       this.render();
       this.app.onPBNodeSelected(null);
     }
@@ -671,6 +789,16 @@ class PBEditor {
   }
 
   /* ---- Helpers ---- */
+
+  _getSubActivityIdAt(e) {
+    let el = e.target;
+    while (el && el !== this.svg) {
+      const subId = el.getAttribute('data-sub-id');
+      if (subId) return subId;
+      el = el.parentElement;
+    }
+    return null;
+  }
 
   _getNodeIdAt(e) {
     let el = e.target;
