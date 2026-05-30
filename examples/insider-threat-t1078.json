@@ -412,7 +412,134 @@
       "role-insider-lead": {"id": "role-insider-lead", "name": "Insider Threat Lead"},
       "role-hr-liaison": {"id": "role-hr-liaison", "name": "HR/Legal Liaison"}
     },
-    "symbiosis": null
+    "symbiosis": {
+      "businessObjectives": {
+        "bo-001": {
+          "id": "bo-001",
+          "scope": "All sensitive corporate data and intellectual property repositories",
+          "purpose": "Ensure proper governance of data access, classification, and handling by authorized users",
+          "viewpoint": "Data Governance and Compliance",
+          "context": "Insiders have legitimate access that can be abused; governance controls must detect misuse without impeding productivity",
+          "relatedObjectiveIds": ["bo-002"],
+          "paragonId": null
+        },
+        "bo-002": {
+          "id": "bo-002",
+          "scope": "User permissions and role-based access across all systems",
+          "purpose": "Enforce least-privilege access to minimize the blast radius of insider abuse",
+          "viewpoint": "Identity Governance and Administration",
+          "context": "Excessive permissions amplify insider threat impact; regular access reviews are essential",
+          "relatedObjectiveIds": ["bo-001", "bo-003"],
+          "paragonId": null
+        },
+        "bo-003": {
+          "id": "bo-003",
+          "scope": "User behavioral patterns and trust indicators",
+          "purpose": "Establish and maintain behavioral baselines to detect anomalous insider activity",
+          "viewpoint": "Behavioral Analytics and Insider Risk",
+          "context": "Trusted insiders deviate from normal patterns before or during malicious activity; early detection prevents damage",
+          "relatedObjectiveIds": ["bo-001"],
+          "paragonId": null
+        }
+      },
+      "securityMeasurementGoals": {
+        "smg-001": {
+          "id": "smg-001",
+          "viewpoint": "Security Operations Center",
+          "context": "User behavior analytics must distinguish genuine threats from benign anomalies",
+          "scope": "UBA/UEBA platforms monitoring all user activity",
+          "purpose": "Measure the accuracy and coverage of anomalous access detection for insider threats",
+          "focus": "Alert fidelity, false positive rate, and coverage of monitored user populations",
+          "criteria": "UBA alert precision ≥70% with coverage of 100% of privileged users",
+          "businessObjectiveIds": ["bo-003"],
+          "paragonId": null
+        },
+        "smg-002": {
+          "id": "smg-002",
+          "viewpoint": "Identity Governance",
+          "context": "Privilege escalation by insiders often precedes data theft or sabotage",
+          "scope": "All privilege escalation events and role change requests",
+          "purpose": "Monitor and measure detection of unauthorized or anomalous privilege escalations",
+          "focus": "Unauthorized role changes, policy violations, and escalation attempt detection",
+          "criteria": "100% of privilege escalations logged and reviewed within 24 hours",
+          "businessObjectiveIds": ["bo-002"],
+          "paragonId": null
+        },
+        "smg-003": {
+          "id": "smg-003",
+          "viewpoint": "Data Protection",
+          "context": "Tracking sensitive data movement enables detection of staging and exfiltration by insiders",
+          "scope": "All data movement involving classified or sensitive information",
+          "purpose": "Measure visibility into sensitive data access and transfer patterns",
+          "focus": "Data access logging completeness, transfer monitoring, and anomaly detection",
+          "criteria": "≥95% of sensitive data repositories have access auditing enabled with anomaly alerting",
+          "businessObjectiveIds": ["bo-001", "bo-003"],
+          "paragonId": null
+        }
+      },
+      "securityMetrics": {
+        "sm-001": {
+          "id": "sm-001",
+          "description": "Accuracy percentage of UBA alerts for anomalous insider behavior (true positives vs total alerts)",
+          "goal": "Maintain high-fidelity alerting that enables analysts to trust and act on insider threat indicators",
+          "baseMeasurementIds": ["bm-001", "bm-002"],
+          "method": "Calculate ratio of confirmed true positive UBA alerts to total UBA alerts generated",
+          "measurementFunction": "(bm-001 / bm-002) * 100",
+          "interpretation": "Accuracy below 50% causes alert fatigue; above 70% indicates well-tuned behavioral models",
+          "reporting": "Weekly UBA tuning report; monthly insider threat program review",
+          "smgIds": ["smg-001"]
+        },
+        "sm-002": {
+          "id": "sm-002",
+          "description": "Percentage of scheduled privilege access reviews completed on time",
+          "goal": "Ensure regular validation that user permissions align with current job responsibilities",
+          "baseMeasurementIds": ["bm-003", "bm-004"],
+          "method": "Track completion status of scheduled access reviews against their due dates",
+          "measurementFunction": "(bm-003 / bm-004) * 100",
+          "interpretation": "Rates below 90% indicate governance process failures; incomplete reviews leave excessive permissions undetected",
+          "reporting": "Monthly governance compliance report; quarterly audit evidence",
+          "smgIds": ["smg-002"]
+        },
+        "sm-003": {
+          "id": "sm-003",
+          "description": "Percentage of sensitive data repositories with active access auditing and anomaly alerting",
+          "goal": "Achieve comprehensive visibility into who accesses sensitive data and detect unusual patterns",
+          "baseMeasurementIds": ["bm-005", "bm-006"],
+          "method": "Inventory sensitive data repositories and verify auditing and alerting configuration status",
+          "measurementFunction": "(bm-005 / bm-006) * 100",
+          "interpretation": "Gaps in coverage represent blind spots where insider data theft could go undetected",
+          "reporting": "Weekly data protection posture report; monthly compliance dashboard",
+          "smgIds": ["smg-003"]
+        }
+      },
+      "baseMeasurements": {
+        "bm-001": {
+          "id": "bm-001",
+          "description": "Count of UBA alerts confirmed as true positive insider threat indicators"
+        },
+        "bm-002": {
+          "id": "bm-002",
+          "description": "Total count of UBA alerts generated for anomalous user behavior"
+        },
+        "bm-003": {
+          "id": "bm-003",
+          "description": "Count of scheduled privilege access reviews completed by their due date"
+        },
+        "bm-004": {
+          "id": "bm-004",
+          "description": "Total count of scheduled privilege access reviews in the reporting period"
+        },
+        "bm-005": {
+          "id": "bm-005",
+          "description": "Count of sensitive data repositories with active access auditing and anomaly alerting configured"
+        },
+        "bm-006": {
+          "id": "bm-006",
+          "description": "Total count of identified sensitive data repositories in the organization"
+        }
+      },
+      "dependencyModelParagonIds": ["pg-root"]
+    }
   },
   "representation": {"dmViews": {}, "pbViews": {}}
 }

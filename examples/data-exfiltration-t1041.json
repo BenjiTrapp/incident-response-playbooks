@@ -412,7 +412,126 @@
       "role-network-eng": {"id": "role-network-eng", "name": "Network Security Engineer"},
       "role-data-lead": {"id": "role-data-lead", "name": "Data Protection Lead"}
     },
-    "symbiosis": null
+    "symbiosis": {
+      "businessObjectives": {
+        "bo-001": {
+          "id": "bo-001",
+          "scope": "All sensitive data at rest and in transit across the enterprise",
+          "purpose": "Prevent unauthorized disclosure of sensitive data through technical and policy controls",
+          "viewpoint": "Data Loss Prevention",
+          "context": "Data exfiltration is the terminal objective of most advanced attacks; prevention is paramount",
+          "relatedObjectiveIds": ["bo-002"],
+          "paragonId": null
+        },
+        "bo-002": {
+          "id": "bo-002",
+          "scope": "All network egress points and data transfer channels",
+          "purpose": "Control and monitor all outbound data flows to detect unauthorized transfers",
+          "viewpoint": "Network Security and Monitoring",
+          "context": "Attackers use various egress channels including HTTPS, DNS tunneling, and cloud services to exfiltrate data",
+          "relatedObjectiveIds": ["bo-001", "bo-003"],
+          "paragonId": null
+        },
+        "bo-003": {
+          "id": "bo-003",
+          "scope": "Trade secrets, source code, customer data, and proprietary information",
+          "purpose": "Safeguard intellectual property from theft by external attackers and malicious insiders",
+          "viewpoint": "Intellectual Property Protection",
+          "context": "Loss of IP can result in competitive disadvantage, regulatory penalties, and reputational harm",
+          "relatedObjectiveIds": ["bo-001"],
+          "paragonId": null
+        }
+      },
+      "securityMeasurementGoals": {
+        "smg-001": {
+          "id": "smg-001",
+          "viewpoint": "Security Operations Center",
+          "context": "Detecting exfiltration requires correlation of data volume, destination, timing, and protocol anomalies",
+          "scope": "All network monitoring and DLP detection systems",
+          "purpose": "Measure the capability to detect active data exfiltration across all egress channels",
+          "focus": "Detection coverage for known exfiltration techniques including encrypted channels, steganography, and protocol abuse",
+          "criteria": "≥90% of simulated exfiltration scenarios detected during red team exercises",
+          "businessObjectiveIds": ["bo-001", "bo-002"],
+          "paragonId": null
+        },
+        "smg-002": {
+          "id": "smg-002",
+          "viewpoint": "Data Protection Engineering",
+          "context": "DLP policies must cover all sensitive data types and transfer vectors",
+          "scope": "DLP solution deployment across endpoints, email, web, and cloud",
+          "purpose": "Track the breadth and depth of DLP policy coverage across data channels",
+          "focus": "Policy coverage percentage, data classification accuracy, and channel monitoring completeness",
+          "criteria": "DLP policies active on 100% of egress channels with ≤5% false positive rate",
+          "businessObjectiveIds": ["bo-001", "bo-003"],
+          "paragonId": null
+        },
+        "smg-003": {
+          "id": "smg-003",
+          "viewpoint": "Network Security Engineering",
+          "context": "Comprehensive egress monitoring provides visibility into all outbound data flows",
+          "scope": "All network egress points including proxies, firewalls, and cloud gateways",
+          "purpose": "Measure monitoring coverage and anomaly detection capability for outbound traffic",
+          "focus": "Egress point coverage, traffic baseline accuracy, and volumetric anomaly detection",
+          "criteria": "100% of egress points monitored with volumetric anomaly detection enabled",
+          "businessObjectiveIds": ["bo-002"],
+          "paragonId": null
+        }
+      },
+      "securityMetrics": {
+        "sm-001": {
+          "id": "sm-001",
+          "description": "Rate of DLP policy triggers per reporting period indicating potential data loss events",
+          "goal": "Track DLP engagement to validate policy effectiveness and identify data handling violations",
+          "baseMeasurementIds": ["bm-001"],
+          "method": "Count DLP policy violation events across all monitored channels per reporting period",
+          "measurementFunction": "count(dlp_policy_triggers) per week, segmented by severity and channel",
+          "interpretation": "Trending increases may indicate attack activity or policy drift; low trigger rates on sensitive data may indicate classification gaps",
+          "reporting": "Daily DLP incident summary; weekly trending to data protection officer",
+          "smgIds": ["smg-002"]
+        },
+        "sm-002": {
+          "id": "sm-002",
+          "description": "Percentage of unauthorized data transfer attempts detected and blocked",
+          "goal": "Maximize detection of exfiltration attempts to prevent data loss",
+          "baseMeasurementIds": ["bm-002", "bm-003"],
+          "method": "Compare detected unauthorized transfers against total unauthorized transfers including those found in forensic review",
+          "measurementFunction": "(bm-002 / bm-003) * 100",
+          "interpretation": "Rates below 85% indicate monitoring blind spots requiring additional sensor deployment or rule tuning",
+          "reporting": "Weekly security operations report; post-exercise detection assessment",
+          "smgIds": ["smg-001"]
+        },
+        "sm-003": {
+          "id": "sm-003",
+          "description": "Mean time to block an identified exfiltration channel after detection",
+          "goal": "Minimize data loss volume by rapidly severing confirmed exfiltration paths",
+          "baseMeasurementIds": ["bm-004"],
+          "method": "Calculate average elapsed time from exfiltration detection alert to channel blocking action",
+          "measurementFunction": "average(block_timestamp - detection_timestamp)",
+          "interpretation": "Target under 10 minutes; longer response times directly correlate with increased data loss volume",
+          "reporting": "Per-incident response timeline; monthly MTTR metrics to security leadership",
+          "smgIds": ["smg-001", "smg-003"]
+        }
+      },
+      "baseMeasurements": {
+        "bm-001": {
+          "id": "bm-001",
+          "description": "Count of DLP policy trigger events across all monitored channels"
+        },
+        "bm-002": {
+          "id": "bm-002",
+          "description": "Count of unauthorized data transfer attempts detected and blocked by security controls"
+        },
+        "bm-003": {
+          "id": "bm-003",
+          "description": "Total unauthorized data transfer attempts including those identified through post-incident analysis"
+        },
+        "bm-004": {
+          "id": "bm-004",
+          "description": "Elapsed time in minutes from exfiltration channel detection to blocking action"
+        }
+      },
+      "dependencyModelParagonIds": ["pg-root"]
+    }
   },
   "representation": {"dmViews": {}, "pbViews": {}}
 }

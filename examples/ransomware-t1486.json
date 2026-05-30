@@ -645,7 +645,126 @@
       "role-forensics": {"id": "role-forensics", "name": "Forensics Lead"},
       "role-sysadmin": {"id": "role-sysadmin", "name": "System Administrator"}
     },
-    "symbiosis": null
+    "symbiosis": {
+      "businessObjectives": {
+        "bo-001": {
+          "id": "bo-001",
+          "scope": "All critical business data and storage systems",
+          "purpose": "Ensure organizational data remains accessible and uncorrupted at all times",
+          "viewpoint": "Data Management and IT Operations",
+          "context": "Ransomware directly targets data availability; loss of access halts revenue-generating operations",
+          "relatedObjectiveIds": ["bo-002"],
+          "paragonId": null
+        },
+        "bo-002": {
+          "id": "bo-002",
+          "scope": "Core business processes and revenue-generating services",
+          "purpose": "Maintain operational continuity during and after ransomware incidents",
+          "viewpoint": "Business Continuity Planning",
+          "context": "Extended outages from ransomware can cause catastrophic financial and reputational damage",
+          "relatedObjectiveIds": ["bo-001", "bo-003"],
+          "paragonId": null
+        },
+        "bo-003": {
+          "id": "bo-003",
+          "scope": "Backup infrastructure and disaster recovery systems",
+          "purpose": "Guarantee the ability to restore systems to a known-good state within defined timeframes",
+          "viewpoint": "Disaster Recovery and Resilience",
+          "context": "Recovery capability is the ultimate defense against ransomware; paying ransom is unreliable and funds criminal enterprise",
+          "relatedObjectiveIds": ["bo-001", "bo-002"],
+          "paragonId": null
+        }
+      },
+      "securityMeasurementGoals": {
+        "smg-001": {
+          "id": "smg-001",
+          "viewpoint": "Backup and Recovery Engineering",
+          "context": "Backups must be intact, tested, and isolated from ransomware propagation paths",
+          "scope": "All backup repositories and immutable storage targets",
+          "purpose": "Verify backup integrity and recoverability on a continuous basis",
+          "focus": "Backup completeness, integrity verification, and isolation from production networks",
+          "criteria": "100% of critical systems have verified backups within RPO window",
+          "businessObjectiveIds": ["bo-001", "bo-003"],
+          "paragonId": null
+        },
+        "smg-002": {
+          "id": "smg-002",
+          "viewpoint": "Security Operations Center",
+          "context": "Early detection of encryption activity is critical to limit blast radius",
+          "scope": "All endpoints and file servers monitored by EDR and file integrity solutions",
+          "purpose": "Measure speed of detecting unauthorized bulk encryption operations",
+          "focus": "Time-to-detect for file encryption anomalies and ransomware behavioral indicators",
+          "criteria": "Encryption activity detected within 60 seconds of initiation",
+          "businessObjectiveIds": ["bo-002"],
+          "paragonId": null
+        },
+        "smg-003": {
+          "id": "smg-003",
+          "viewpoint": "IT Service Management",
+          "context": "Recovery time directly correlates with business impact magnitude",
+          "scope": "Tier-1 and Tier-2 business applications and supporting infrastructure",
+          "purpose": "Track and improve the time required to restore services after ransomware encryption",
+          "focus": "Recovery Time Objective adherence across service tiers",
+          "criteria": "Tier-1 services restored within 4 hours; Tier-2 within 24 hours",
+          "businessObjectiveIds": ["bo-002", "bo-003"],
+          "paragonId": null
+        }
+      },
+      "securityMetrics": {
+        "sm-001": {
+          "id": "sm-001",
+          "description": "Percentage of critical systems meeting their defined Recovery Point Objective",
+          "goal": "Ensure backup freshness meets business requirements so data loss is minimized in recovery scenarios",
+          "baseMeasurementIds": ["bm-001", "bm-002"],
+          "method": "Compare most recent verified backup timestamp against RPO threshold for each critical system",
+          "measurementFunction": "(bm-001 / bm-002) * 100",
+          "interpretation": "100% indicates all systems are within RPO; any deviation requires immediate backup remediation",
+          "reporting": "Daily automated report to backup team; weekly summary to IT leadership",
+          "smgIds": ["smg-001"]
+        },
+        "sm-002": {
+          "id": "sm-002",
+          "description": "Mean time to detect unauthorized file encryption activity across monitored endpoints",
+          "goal": "Minimize detection latency to contain ransomware before widespread encryption occurs",
+          "baseMeasurementIds": ["bm-003"],
+          "method": "Calculate average time between encryption activity start and first security alert generation",
+          "measurementFunction": "average(alert_timestamp - encryption_start_timestamp)",
+          "interpretation": "Sub-minute detection enables containment before significant data loss; values over 5 minutes indicate detection gaps",
+          "reporting": "Real-time SOC dashboard; post-incident analysis reports",
+          "smgIds": ["smg-002"]
+        },
+        "sm-003": {
+          "id": "sm-003",
+          "description": "Percentage of recovery operations completing within the defined Recovery Time Objective",
+          "goal": "Validate that disaster recovery procedures meet committed SLAs for service restoration",
+          "baseMeasurementIds": ["bm-004", "bm-002"],
+          "method": "Track recovery drill and actual incident recovery durations against RTO targets per service tier",
+          "measurementFunction": "(bm-004 / bm-002) * 100",
+          "interpretation": "Values below 95% indicate DR process deficiencies requiring runbook updates or infrastructure investment",
+          "reporting": "After each DR drill or incident; quarterly trending to management",
+          "smgIds": ["smg-003"]
+        }
+      },
+      "baseMeasurements": {
+        "bm-001": {
+          "id": "bm-001",
+          "description": "Count of critical systems with verified backups within their defined RPO window"
+        },
+        "bm-002": {
+          "id": "bm-002",
+          "description": "Total count of critical systems requiring backup coverage"
+        },
+        "bm-003": {
+          "id": "bm-003",
+          "description": "Elapsed time in seconds from encryption activity initiation to first detection alert"
+        },
+        "bm-004": {
+          "id": "bm-004",
+          "description": "Count of recovery operations completed within the defined RTO threshold"
+        }
+      },
+      "dependencyModelParagonIds": ["pg-root"]
+    }
   },
   "representation": {"dmViews": {}, "pbViews": {}}
 }

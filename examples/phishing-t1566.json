@@ -705,7 +705,126 @@
         "name": "Email Administrator"
       }
     },
-    "symbiosis": null
+    "symbiosis": {
+      "businessObjectives": {
+        "bo-001": {
+          "id": "bo-001",
+          "scope": "Enterprise email infrastructure and messaging services",
+          "purpose": "Ensure uninterrupted email communication for all business units",
+          "viewpoint": "IT Operations and Business Continuity",
+          "context": "Email is the primary communication channel; disruption from phishing incidents impacts productivity organization-wide",
+          "relatedObjectiveIds": ["bo-002"],
+          "paragonId": null
+        },
+        "bo-002": {
+          "id": "bo-002",
+          "scope": "End-user workflow and daily operations",
+          "purpose": "Maintain user productivity by minimizing phishing-related disruptions and false positives",
+          "viewpoint": "Workforce Enablement",
+          "context": "Overly aggressive filtering or frequent phishing incidents reduce employee output and increase help desk burden",
+          "relatedObjectiveIds": ["bo-001", "bo-003"],
+          "paragonId": null
+        },
+        "bo-003": {
+          "id": "bo-003",
+          "scope": "Sensitive corporate and customer data transmitted via email",
+          "purpose": "Protect confidential information from disclosure through phishing-based credential theft or data harvesting",
+          "viewpoint": "Information Security and Compliance",
+          "context": "Phishing is the leading initial access vector for data breaches; safeguarding email content and credentials is critical",
+          "relatedObjectiveIds": ["bo-002"],
+          "paragonId": null
+        }
+      },
+      "securityMeasurementGoals": {
+        "smg-001": {
+          "id": "smg-001",
+          "viewpoint": "Security Operations Center",
+          "context": "Phishing emails must be detected and quarantined before reaching end users",
+          "scope": "All inbound email traffic across enterprise mail gateways",
+          "purpose": "Measure the effectiveness of phishing detection controls",
+          "focus": "Detection accuracy and coverage of phishing attempts",
+          "criteria": "≥95% of phishing emails blocked before inbox delivery",
+          "businessObjectiveIds": ["bo-001", "bo-003"],
+          "paragonId": null
+        },
+        "smg-002": {
+          "id": "smg-002",
+          "viewpoint": "Security Awareness Program",
+          "context": "Users are the last line of defense when technical controls fail",
+          "scope": "All employees with email access",
+          "purpose": "Quantify employee resilience to phishing through training and simulation",
+          "focus": "Human factor in phishing defense",
+          "criteria": "<5% click-through rate on simulated phishing campaigns",
+          "businessObjectiveIds": ["bo-002"],
+          "paragonId": null
+        },
+        "smg-003": {
+          "id": "smg-003",
+          "viewpoint": "Email Infrastructure Engineering",
+          "context": "The secure email gateway is the primary technical control against phishing",
+          "scope": "Email gateway appliances and cloud email security services",
+          "purpose": "Evaluate email gateway filtering performance and throughput under phishing load",
+          "focus": "Gateway detection rate, false positive rate, and processing latency",
+          "criteria": "Gateway processes 100% of traffic with <0.1% false positive rate",
+          "businessObjectiveIds": ["bo-001", "bo-002"],
+          "paragonId": null
+        }
+      },
+      "securityMetrics": {
+        "sm-001": {
+          "id": "sm-001",
+          "description": "Percentage of inbound phishing emails blocked by security controls before reaching user inboxes",
+          "goal": "Maximize automated blocking of phishing attempts to reduce user exposure",
+          "baseMeasurementIds": ["bm-001", "bm-002"],
+          "method": "Calculate ratio of blocked phishing emails to total phishing emails identified (blocked + reported by users)",
+          "measurementFunction": "(bm-001 / (bm-001 + bm-002)) * 100",
+          "interpretation": "Higher percentage indicates more effective gateway controls; values below 90% require immediate tuning of detection rules",
+          "reporting": "Weekly dashboard report to SOC; monthly executive summary",
+          "smgIds": ["smg-001"]
+        },
+        "sm-002": {
+          "id": "sm-002",
+          "description": "Click-through rate on simulated phishing emails sent during security awareness campaigns",
+          "goal": "Track user susceptibility to phishing and measure training program effectiveness over time",
+          "baseMeasurementIds": ["bm-003", "bm-004"],
+          "method": "Calculate percentage of users who clicked links in simulated phishing emails out of total recipients",
+          "measurementFunction": "(bm-003 / bm-004) * 100",
+          "interpretation": "Lower rate indicates better user awareness; rates above 10% trigger mandatory retraining for affected groups",
+          "reporting": "Monthly report to CISO and HR; quarterly board-level summary",
+          "smgIds": ["smg-002"]
+        },
+        "sm-003": {
+          "id": "sm-003",
+          "description": "Mean time from phishing email delivery to user reporting via the phish report button",
+          "goal": "Reduce user reporting time to enable faster incident response and threat intelligence updates",
+          "baseMeasurementIds": ["bm-002"],
+          "method": "Calculate average elapsed time between email delivery timestamp and user report submission timestamp",
+          "measurementFunction": "average(report_timestamp - delivery_timestamp) for all user-reported phishing",
+          "interpretation": "Shorter times indicate engaged users; target is under 10 minutes for first report of a new campaign",
+          "reporting": "Real-time SOC dashboard; weekly trend analysis",
+          "smgIds": ["smg-001", "smg-002"]
+        }
+      },
+      "baseMeasurements": {
+        "bm-001": {
+          "id": "bm-001",
+          "description": "Count of phishing emails blocked by the email security gateway"
+        },
+        "bm-002": {
+          "id": "bm-002",
+          "description": "Count of phishing emails reported by users that were not caught by automated controls"
+        },
+        "bm-003": {
+          "id": "bm-003",
+          "description": "Count of users who clicked on links in simulated phishing emails"
+        },
+        "bm-004": {
+          "id": "bm-004",
+          "description": "Total number of users who received simulated phishing emails"
+        }
+      },
+      "dependencyModelParagonIds": ["pg-root"]
+    }
   },
   "representation": {
     "dmViews": {},

@@ -457,7 +457,130 @@
       "role-devsecops": {"id": "role-devsecops", "name": "DevSecOps Engineer"},
       "role-vendor-mgmt": {"id": "role-vendor-mgmt", "name": "Vendor Management Lead"}
     },
-    "symbiosis": null
+    "symbiosis": {
+      "businessObjectives": {
+        "bo-001": {
+          "id": "bo-001",
+          "scope": "All software artifacts consumed and deployed in the organization",
+          "purpose": "Ensure the integrity of software components from source through deployment",
+          "viewpoint": "Software Supply Chain Security",
+          "context": "Compromised software dependencies can introduce backdoors affecting the entire organization",
+          "relatedObjectiveIds": ["bo-002"],
+          "paragonId": null
+        },
+        "bo-002": {
+          "id": "bo-002",
+          "scope": "CI/CD pipelines and build infrastructure",
+          "purpose": "Maintain trust in build pipelines to ensure deployed artifacts match intended source code",
+          "viewpoint": "DevSecOps and Build Engineering",
+          "context": "Compromised build systems can inject malicious code into otherwise legitimate software releases",
+          "relatedObjectiveIds": ["bo-001", "bo-003"],
+          "paragonId": null
+        },
+        "bo-003": {
+          "id": "bo-003",
+          "scope": "Third-party vendor and open-source dependency ecosystem",
+          "purpose": "Manage and reduce risk from external software suppliers and open-source components",
+          "viewpoint": "Third-Party Risk Management",
+          "context": "Organizations depend on hundreds of external libraries; each represents a potential supply chain attack vector",
+          "relatedObjectiveIds": ["bo-001"],
+          "paragonId": null
+        }
+      },
+      "securityMeasurementGoals": {
+        "smg-001": {
+          "id": "smg-001",
+          "viewpoint": "Application Security",
+          "context": "Verifying dependency integrity through checksums and signatures prevents tampered packages from entering the build",
+          "scope": "All package managers and dependency resolution systems",
+          "purpose": "Measure the rate of cryptographic verification for consumed software dependencies",
+          "focus": "Hash verification, signature validation, and SBOM completeness",
+          "criteria": "100% of dependencies verified against known-good hashes before build inclusion",
+          "businessObjectiveIds": ["bo-001", "bo-003"],
+          "paragonId": null
+        },
+        "smg-002": {
+          "id": "smg-002",
+          "viewpoint": "Build Engineering",
+          "context": "Signed artifacts provide provenance assurance and tamper evidence",
+          "scope": "All CI/CD pipelines producing deployable artifacts",
+          "purpose": "Track the coverage of cryptographic signing across build artifacts",
+          "focus": "Artifact signing rate, key management practices, and signature verification at deployment",
+          "criteria": "100% of production-bound artifacts cryptographically signed with verified provenance",
+          "businessObjectiveIds": ["bo-002"],
+          "paragonId": null
+        },
+        "smg-003": {
+          "id": "smg-003",
+          "viewpoint": "Vulnerability Management",
+          "context": "Known vulnerable dependencies must be identified and patched rapidly to limit exposure",
+          "scope": "All third-party and open-source dependencies in production systems",
+          "purpose": "Measure the organization's ability to identify and remediate vulnerable dependencies",
+          "focus": "Vulnerability scanning coverage, patching speed, and dependency freshness",
+          "criteria": "Critical dependency vulnerabilities patched within 72 hours of disclosure",
+          "businessObjectiveIds": ["bo-001", "bo-003"],
+          "paragonId": null
+        }
+      },
+      "securityMetrics": {
+        "sm-001": {
+          "id": "sm-001",
+          "description": "Percentage of software dependencies with cryptographically verified hashes at build time",
+          "goal": "Ensure all consumed dependencies are verified against known-good checksums to detect tampering",
+          "baseMeasurementIds": ["bm-001", "bm-002"],
+          "method": "Query build system logs for hash verification status of each dependency resolved during builds",
+          "measurementFunction": "(bm-001 / bm-002) * 100",
+          "interpretation": "Values below 100% indicate dependencies consumed without verification; each represents a potential supply chain risk",
+          "reporting": "Per-build verification report; weekly summary to application security team",
+          "smgIds": ["smg-001"]
+        },
+        "sm-002": {
+          "id": "sm-002",
+          "description": "Detection rate of unsigned or improperly signed build artifacts before deployment",
+          "goal": "Prevent unsigned artifacts from reaching production environments",
+          "baseMeasurementIds": ["bm-003", "bm-004"],
+          "method": "Compare unsigned artifacts detected and blocked against total artifacts produced",
+          "measurementFunction": "(bm-003 / bm-004) * 100 for unsigned rate; target is 0%",
+          "interpretation": "Any unsigned artifacts indicate pipeline misconfiguration or potential compromise requiring investigation",
+          "reporting": "Deployment gate blocking report; daily pipeline health dashboard",
+          "smgIds": ["smg-002"]
+        },
+        "sm-003": {
+          "id": "sm-003",
+          "description": "Mean time to patch a vulnerable third-party dependency after public disclosure",
+          "goal": "Minimize exposure window to known supply chain vulnerabilities",
+          "baseMeasurementIds": ["bm-005"],
+          "method": "Calculate average elapsed time from CVE publication to patched dependency deployed in production",
+          "measurementFunction": "average(patch_deployed_timestamp - cve_published_timestamp)",
+          "interpretation": "Critical vulnerabilities exceeding 72 hours indicate process bottlenecks; high-severity exceeding 7 days requires escalation",
+          "reporting": "Weekly vulnerability management report; monthly trending to CISO",
+          "smgIds": ["smg-003"]
+        }
+      },
+      "baseMeasurements": {
+        "bm-001": {
+          "id": "bm-001",
+          "description": "Count of dependencies with successful cryptographic hash verification at build time"
+        },
+        "bm-002": {
+          "id": "bm-002",
+          "description": "Total count of dependencies resolved across all build pipelines"
+        },
+        "bm-003": {
+          "id": "bm-003",
+          "description": "Count of unsigned or improperly signed artifacts detected before deployment"
+        },
+        "bm-004": {
+          "id": "bm-004",
+          "description": "Total count of build artifacts produced across all pipelines"
+        },
+        "bm-005": {
+          "id": "bm-005",
+          "description": "Elapsed time in hours from vulnerability disclosure to patched dependency deployed in production"
+        }
+      },
+      "dependencyModelParagonIds": ["pg-root"]
+    }
   },
   "representation": {"dmViews": {}, "pbViews": {}}
 }

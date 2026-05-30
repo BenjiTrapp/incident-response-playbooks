@@ -472,7 +472,126 @@
       "role-threat-intel": {"id": "role-threat-intel", "name": "Threat Intelligence Analyst"},
       "role-network-eng": {"id": "role-network-eng", "name": "Network Security Engineer"}
     },
-    "symbiosis": null
+    "symbiosis": {
+      "businessObjectives": {
+        "bo-001": {
+          "id": "bo-001",
+          "scope": "All employee web browsing activity and web-dependent workflows",
+          "purpose": "Enable safe web browsing without exposing endpoints to drive-by exploitation",
+          "viewpoint": "Workforce Productivity and Security",
+          "context": "Users require web access for daily work; drive-by compromises exploit this access without user interaction",
+          "relatedObjectiveIds": ["bo-002"],
+          "paragonId": null
+        },
+        "bo-002": {
+          "id": "bo-002",
+          "scope": "Network perimeter and web traffic inspection infrastructure",
+          "purpose": "Maintain network boundary integrity by preventing malicious inbound content from reaching endpoints",
+          "viewpoint": "Network Security Architecture",
+          "context": "Drive-by compromises deliver exploits through legitimate web traffic, requiring deep content inspection",
+          "relatedObjectiveIds": ["bo-001", "bo-003"],
+          "paragonId": null
+        },
+        "bo-003": {
+          "id": "bo-003",
+          "scope": "Browser and plugin vulnerability surface across all managed endpoints",
+          "purpose": "Prevent successful exploitation of browser vulnerabilities by drive-by kits",
+          "viewpoint": "Vulnerability Management",
+          "context": "Exploit kits target known browser and plugin vulnerabilities; patching and exploit mitigation are primary defenses",
+          "relatedObjectiveIds": ["bo-001"],
+          "paragonId": null
+        }
+      },
+      "securityMeasurementGoals": {
+        "smg-001": {
+          "id": "smg-001",
+          "viewpoint": "Web Security Engineering",
+          "context": "Web filtering must block access to known malicious sites and newly identified threats",
+          "scope": "All web proxy and DNS filtering infrastructure",
+          "purpose": "Measure the coverage and effectiveness of web content filtering against malicious URLs",
+          "focus": "URL categorization accuracy, threat intelligence feed coverage, and blocking rate",
+          "criteria": "≥99% of known malicious URLs blocked before user access",
+          "businessObjectiveIds": ["bo-001", "bo-002"],
+          "paragonId": null
+        },
+        "smg-002": {
+          "id": "smg-002",
+          "viewpoint": "Endpoint Security Architecture",
+          "context": "Browser isolation prevents exploit code from executing on the endpoint even if the user visits a malicious page",
+          "scope": "Browser isolation technology deployed to high-risk user populations",
+          "purpose": "Evaluate the effectiveness of browser isolation in preventing drive-by exploitation",
+          "focus": "Isolation coverage, rendering fidelity, and exploit containment rate",
+          "criteria": "100% of high-risk browsing sessions rendered in isolation with zero endpoint impact",
+          "businessObjectiveIds": ["bo-001", "bo-003"],
+          "paragonId": null
+        },
+        "smg-003": {
+          "id": "smg-003",
+          "viewpoint": "Security Operations Center",
+          "context": "Exploit attempts that bypass filtering must be detected through behavioral analysis and network signatures",
+          "scope": "IDS/IPS, EDR, and network traffic analysis systems",
+          "purpose": "Measure detection rate of browser exploit attempts in network and endpoint telemetry",
+          "focus": "Exploit kit signature detection, anomalous browser process behavior, and shellcode execution attempts",
+          "criteria": "≥95% of exploit attempts detected with mean time to alert under 30 seconds",
+          "businessObjectiveIds": ["bo-002", "bo-003"],
+          "paragonId": null
+        }
+      },
+      "securityMetrics": {
+        "sm-001": {
+          "id": "sm-001",
+          "description": "Percentage of malicious URLs blocked by web filtering infrastructure before user access",
+          "goal": "Prevent users from reaching exploit kit landing pages and malicious content delivery sites",
+          "baseMeasurementIds": ["bm-001", "bm-002"],
+          "method": "Compare blocked malicious URL requests against total malicious URL requests (blocked + allowed)",
+          "measurementFunction": "(bm-001 / (bm-001 + bm-002)) * 100",
+          "interpretation": "Values below 95% indicate stale threat feeds or filtering bypass; requires immediate feed update and policy review",
+          "reporting": "Daily web security report; weekly trending to security leadership",
+          "smgIds": ["smg-001"]
+        },
+        "sm-002": {
+          "id": "sm-002",
+          "description": "Count of browser exploit attempts caught by IDS/IPS, EDR, and network analysis",
+          "goal": "Detect exploit delivery and execution attempts that bypass web filtering controls",
+          "baseMeasurementIds": ["bm-003"],
+          "method": "Aggregate exploit detection events from IDS/IPS signatures, EDR behavioral rules, and sandbox detonation",
+          "measurementFunction": "count(exploit_detection_events) per reporting period",
+          "interpretation": "Increasing trend may indicate targeted campaign; zero detections during active threat period indicates visibility gap",
+          "reporting": "Real-time SOC alerting; weekly threat intelligence correlation report",
+          "smgIds": ["smg-003"]
+        },
+        "sm-003": {
+          "id": "sm-003",
+          "description": "Mean time to block command-and-control domains after initial drive-by compromise detection",
+          "goal": "Rapidly sever C2 communication to prevent post-exploitation activity after drive-by success",
+          "baseMeasurementIds": ["bm-004"],
+          "method": "Measure elapsed time from first C2 indicator identification to DNS/proxy block enforcement",
+          "measurementFunction": "average(block_timestamp - c2_identification_timestamp)",
+          "interpretation": "Target under 15 minutes; longer times increase risk of data staging and exfiltration",
+          "reporting": "Per-incident response timeline; monthly mean across all incidents",
+          "smgIds": ["smg-001", "smg-003"]
+        }
+      },
+      "baseMeasurements": {
+        "bm-001": {
+          "id": "bm-001",
+          "description": "Count of requests to malicious URLs blocked by web proxy or DNS filtering"
+        },
+        "bm-002": {
+          "id": "bm-002",
+          "description": "Count of requests to malicious URLs that bypassed filtering and reached user browsers"
+        },
+        "bm-003": {
+          "id": "bm-003",
+          "description": "Count of browser exploit attempts detected by IDS/IPS and EDR behavioral analysis"
+        },
+        "bm-004": {
+          "id": "bm-004",
+          "description": "Elapsed time in minutes from C2 domain identification to block rule enforcement"
+        }
+      },
+      "dependencyModelParagonIds": ["pg-root"]
+    }
   },
   "representation": {"dmViews": {}, "pbViews": {}}
 }
