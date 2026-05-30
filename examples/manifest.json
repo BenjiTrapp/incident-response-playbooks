@@ -1,0 +1,27 @@
+[
+  {
+    "filename": "phishing-t1566.json",
+    "name": "Phishing Attack Response (T1566)",
+    "description": "Spearphishing incident response playbook with MITRE ATT&CK (T1566, T1204, T1078) and D3FEND (Email Removal, Homoglyph Detection, DNS Denylisting) mappings."
+  },
+  {
+    "filename": "ransomware-t1486.json",
+    "name": "Ransomware Incident Response (T1486)",
+    "description": "Ransomware response playbook covering encryption impact, lateral movement containment, and backup recovery. ATT&CK: T1486, T1490, T1021. D3FEND: Network Isolation, Backup Analysis."
+  },
+  {
+    "filename": "password-spraying-t1110.json",
+    "name": "Password Spraying Attack Response (T1110.003)",
+    "description": "Identity-focused response to credential spraying attacks. ATT&CK: T1110.003, T1078, T1087. D3FEND: Account Locking, MFA, Credential Hardening."
+  },
+  {
+    "filename": "process-injection-t1055.json",
+    "name": "Process Injection Incident Response (T1055)",
+    "description": "Advanced threat response for process injection techniques including DLL injection and process hollowing. ATT&CK: T1055, T1059, T1003. D3FEND: Memory Analysis, Process Spawn Analysis."
+  },
+  {
+    "filename": "drive-by-compromise-t1189.json",
+    "name": "Drive-by Compromise Response (T1189)",
+    "description": "Web-based exploitation response covering exploit kits, malicious redirects, and C2 beaconing. ATT&CK: T1189, T1203, T1071. D3FEND: Web Filtering, Browser Isolation, URL Analysis."
+  }
+]

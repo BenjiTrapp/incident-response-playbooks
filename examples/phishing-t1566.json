@@ -1,0 +1,714 @@
+{
+  "name": "Phishing Attack Response (T1566)",
+  "version": "1.0",
+  "snapshots": [],
+  "baseline": null,
+  "createdAt": "2025-01-15T00:00:00.000Z",
+  "model": {
+    "dependencyModels": {
+      "dm-001": {
+        "id": "dm-001",
+        "name": "Email Security & User Trust",
+        "rootId": "pg-root",
+        "paragons": {
+          "pg-root": {
+            "id": "pg-root",
+            "description": "Email Security & User Trust",
+            "type": "AND",
+            "leafProbability": 1.0,
+            "childIds": ["pg-gateway-defense", "pg-user-resilience", "pg-endpoint-protection"],
+            "criticalThreshold": 0.7,
+            "notifyMode": "REQUEST_APPROVAL",
+            "stakeholders": [{"name": "CISO", "contact": "ciso@example.com", "roleId": null}]
+          },
+          "pg-gateway-defense": {
+            "id": "pg-gateway-defense",
+            "description": "Email Gateway Defense",
+            "type": "AND",
+            "leafProbability": 1.0,
+            "childIds": ["pg-spam-filter", "pg-attachment-sandbox", "pg-url-rewriting"],
+            "criticalThreshold": 0.7,
+            "notifyMode": "REQUEST_APPROVAL",
+            "stakeholders": [{"name": "Email Admin", "contact": "emailadmin@example.com", "roleId": "role-email-admin"}]
+          },
+          "pg-user-resilience": {
+            "id": "pg-user-resilience",
+            "description": "User Awareness & Resilience",
+            "type": "AND",
+            "leafProbability": 1.0,
+            "childIds": ["pg-phish-reporting", "pg-training-completion"],
+            "criticalThreshold": 0.7,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": [{"name": "Security Awareness Lead", "contact": "awareness@example.com", "roleId": null}]
+          },
+          "pg-endpoint-protection": {
+            "id": "pg-endpoint-protection",
+            "description": "Endpoint Protection Controls",
+            "type": "AND",
+            "leafProbability": 1.0,
+            "childIds": ["pg-edr-coverage", "pg-browser-isolation", "pg-credential-guard"],
+            "criticalThreshold": 0.7,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": [{"name": "Endpoint Lead", "contact": "endpoint@example.com", "roleId": null}]
+          },
+          "pg-spam-filter": {
+            "id": "pg-spam-filter",
+            "description": "Spam filter effectiveness",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.85,
+            "childIds": [],
+            "criticalThreshold": 0.7,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-attachment-sandbox": {
+            "id": "pg-attachment-sandbox",
+            "description": "Attachment sandboxing detection rate",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.78,
+            "childIds": [],
+            "criticalThreshold": 0.7,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-url-rewriting": {
+            "id": "pg-url-rewriting",
+            "description": "URL rewriting and click-time protection",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.82,
+            "childIds": [],
+            "criticalThreshold": 0.7,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-phish-reporting": {
+            "id": "pg-phish-reporting",
+            "description": "User phishing report rate",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.72,
+            "childIds": [],
+            "criticalThreshold": 0.7,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-training-completion": {
+            "id": "pg-training-completion",
+            "description": "Security awareness training completion",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.88,
+            "childIds": [],
+            "criticalThreshold": 0.7,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-edr-coverage": {
+            "id": "pg-edr-coverage",
+            "description": "EDR agent coverage and detection",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.91,
+            "childIds": [],
+            "criticalThreshold": 0.7,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-browser-isolation": {
+            "id": "pg-browser-isolation",
+            "description": "Browser isolation for risky URLs",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.76,
+            "childIds": [],
+            "criticalThreshold": 0.7,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-credential-guard": {
+            "id": "pg-credential-guard",
+            "description": "Credential theft prevention",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.80,
+            "childIds": [],
+            "criticalThreshold": 0.7,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          }
+        }
+      }
+    },
+    "organisations": {
+      "org-001": {
+        "id": "org-001",
+        "name": "Security Operations Center",
+        "roleIds": ["role-analyst", "role-lead", "role-email-admin"],
+        "rootProcessIds": ["proc-root"]
+      }
+    },
+    "processes": {
+      "proc-root": {
+        "id": "proc-root",
+        "name": "Phishing Incident Response",
+        "notes": "Top-level orchestration for phishing incident response lifecycle.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-lead"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": ["ref-001", "ref-002"],
+        "mitreTechniques": [{"techniqueId": "T1566", "techniqueName": "Phishing", "tactic": "Initial Access", "url": "https://attack.mitre.org/techniques/T1566/"}],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-detect", "proc-analysis", "proc-contain", "proc-eradicate", "proc-recover"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-detect": {
+        "id": "proc-detect",
+        "name": "Detection & Triage",
+        "notes": "Detect phishing via gateway alerts and user reports.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1566.001", "techniqueName": "Spearphishing Attachment", "tactic": "Initial Access", "url": "https://attack.mitre.org/techniques/T1566/001/"}],
+        "mitreDefend": [{"techniqueId": "D3-HD", "techniqueName": "Homoglyph Detection", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:HomoglyphDetection"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-monitor-gateway", "proc-user-reports", "proc-triage"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-email-collected"]
+      },
+      "proc-monitor-gateway": {
+        "id": "proc-monitor-gateway",
+        "name": "Monitor Gateway Alerts",
+        "notes": "Monitor email security gateway for phishing detections.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MACHINE",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1566.002", "techniqueName": "Spearphishing Link", "tactic": "Initial Access", "url": "https://attack.mitre.org/techniques/T1566/002/"}],
+        "mitreDefend": [{"techniqueId": "D3-DNSDL", "techniqueName": "DNS Denylisting", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:DNSDenylisting"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": ["act-gateway"],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-email-collected"]
+      },
+      "proc-user-reports": {
+        "id": "proc-user-reports",
+        "name": "Process User Reports",
+        "notes": "Intake and validate phishing reports from end users.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1204.001", "techniqueName": "Malicious Link", "tactic": "Execution", "url": "https://attack.mitre.org/techniques/T1204/001/"}],
+        "mitreDefend": [{"techniqueId": "D3-UBA", "techniqueName": "User Behavior Analysis", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:UserBehaviorAnalysis"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-email-collected"]
+      },
+      "proc-triage": {
+        "id": "proc-triage",
+        "name": "Initial Triage",
+        "notes": "Classify severity and determine if escalation is needed.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-email-collected"],
+        "resultArtifactInStateIds": ["asi-report-created"]
+      },
+      "proc-analysis": {
+        "id": "proc-analysis",
+        "name": "Deep Analysis",
+        "notes": "Perform technical analysis of phishing artifacts.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst", "role-lead"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": ["ref-001"],
+        "mitreTechniques": [{"techniqueId": "T1534", "techniqueName": "Internal Spearphishing", "tactic": "Lateral Movement", "url": "https://attack.mitre.org/techniques/T1534/"}],
+        "mitreDefend": [{"techniqueId": "D3-ER", "techniqueName": "Email Removal", "tactic": "Evict", "url": "https://d3fend.mitre.org/technique/d3f:EmailRemoval"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-header-analysis", "proc-payload-analysis", "proc-ioc-extraction"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-email-collected"],
+        "resultArtifactInStateIds": ["asi-ioc-extracted"]
+      },
+      "proc-header-analysis": {
+        "id": "proc-header-analysis",
+        "name": "Email Header Analysis",
+        "notes": "Analyze email headers for spoofing indicators, SPF/DKIM/DMARC failures.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [{"techniqueId": "D3-HD", "techniqueName": "Homoglyph Detection", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:HomoglyphDetection"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-email-collected"],
+        "resultArtifactInStateIds": []
+      },
+      "proc-payload-analysis": {
+        "id": "proc-payload-analysis",
+        "name": "Payload & URL Analysis",
+        "notes": "Detonate attachments in sandbox; analyze embedded URLs.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MACHINE",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1204.001", "techniqueName": "Malicious Link", "tactic": "Execution", "url": "https://attack.mitre.org/techniques/T1204/001/"}],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": ["act-sandbox"],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-email-collected"],
+        "resultArtifactInStateIds": []
+      },
+      "proc-ioc-extraction": {
+        "id": "proc-ioc-extraction",
+        "name": "IOC Extraction",
+        "notes": "Extract indicators of compromise from analyzed samples.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-ioc-extracted"]
+      },
+      "proc-contain": {
+        "id": "proc-contain",
+        "name": "Containment",
+        "notes": "Block malicious indicators and isolate compromised accounts.",
+        "objectives": ["CONTAINMENT"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-lead", "role-email-admin"],
+        "activityImpacts": [
+          {"id": "ai-001", "paragonId": "pg-spam-filter", "newValue": 0.95},
+          {"id": "ai-002", "paragonId": "pg-url-rewriting", "newValue": 0.93}
+        ],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1078", "techniqueName": "Valid Accounts", "tactic": "Defense Evasion", "url": "https://attack.mitre.org/techniques/T1078/"}],
+        "mitreDefend": [{"techniqueId": "D3-DNSDL", "techniqueName": "DNS Denylisting", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:DNSDenylisting"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-block-sender", "proc-purge-mailboxes", "proc-disable-accounts"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-ioc-extracted"],
+        "resultArtifactInStateIds": ["asi-credentials-reset"]
+      },
+      "proc-block-sender": {
+        "id": "proc-block-sender",
+        "name": "Block Sender & URLs",
+        "notes": "Add sender domains and malicious URLs to blocklists.",
+        "objectives": ["CONTAINMENT"],
+        "actionType": "MACHINE",
+        "paragonId": null,
+        "associatedRoleIds": ["role-email-admin"],
+        "activityImpacts": [
+          {"id": "ai-003", "paragonId": "pg-spam-filter", "newValue": 0.94}
+        ],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [{"techniqueId": "D3-DNSDL", "techniqueName": "DNS Denylisting", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:DNSDenylisting"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": ["act-gateway"],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-ioc-extracted"],
+        "resultArtifactInStateIds": []
+      },
+      "proc-purge-mailboxes": {
+        "id": "proc-purge-mailboxes",
+        "name": "Purge from Mailboxes",
+        "notes": "Search and remove phishing emails from all recipient mailboxes.",
+        "objectives": ["CONTAINMENT"],
+        "actionType": "MACHINE",
+        "paragonId": null,
+        "associatedRoleIds": ["role-email-admin"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [{"techniqueId": "D3-ER", "techniqueName": "Email Removal", "tactic": "Evict", "url": "https://d3fend.mitre.org/technique/d3f:EmailRemoval"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": ["act-gateway"],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-ioc-extracted"],
+        "resultArtifactInStateIds": []
+      },
+      "proc-disable-accounts": {
+        "id": "proc-disable-accounts",
+        "name": "Disable Compromised Accounts",
+        "notes": "Disable accounts that clicked links or submitted credentials.",
+        "objectives": ["CONTAINMENT"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-lead"],
+        "activityImpacts": [
+          {"id": "ai-004", "paragonId": "pg-credential-guard", "newValue": 0.92}
+        ],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1078", "techniqueName": "Valid Accounts", "tactic": "Defense Evasion", "url": "https://attack.mitre.org/techniques/T1078/"}],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-credentials-reset"]
+      },
+      "proc-eradicate": {
+        "id": "proc-eradicate",
+        "name": "Eradication",
+        "notes": "Remove all attacker footholds and harden defenses.",
+        "objectives": ["ERADICATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-lead", "role-email-admin"],
+        "activityImpacts": [
+          {"id": "ai-005", "paragonId": "pg-attachment-sandbox", "newValue": 0.92},
+          {"id": "ai-006", "paragonId": "pg-browser-isolation", "newValue": 0.88}
+        ],
+        "externalReferences": [],
+        "relatedReferenceIds": ["ref-002"],
+        "mitreTechniques": [{"techniqueId": "T1534", "techniqueName": "Internal Spearphishing", "tactic": "Lateral Movement", "url": "https://attack.mitre.org/techniques/T1534/"}],
+        "mitreDefend": [{"techniqueId": "D3-UBA", "techniqueName": "User Behavior Analysis", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:UserBehaviorAnalysis"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-reset-credentials", "proc-update-rules"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-credentials-reset"],
+        "resultArtifactInStateIds": ["asi-rules-updated"]
+      },
+      "proc-reset-credentials": {
+        "id": "proc-reset-credentials",
+        "name": "Reset Credentials & Sessions",
+        "notes": "Force password resets and revoke active sessions for impacted users.",
+        "objectives": ["ERADICATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-lead"],
+        "activityImpacts": [
+          {"id": "ai-007", "paragonId": "pg-credential-guard", "newValue": 0.95}
+        ],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1078", "techniqueName": "Valid Accounts", "tactic": "Defense Evasion", "url": "https://attack.mitre.org/techniques/T1078/"}],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-credentials-reset"],
+        "resultArtifactInStateIds": []
+      },
+      "proc-update-rules": {
+        "id": "proc-update-rules",
+        "name": "Update Detection Rules",
+        "notes": "Update gateway rules, SIEM detections, and EDR signatures based on IOCs.",
+        "objectives": ["ERADICATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst", "role-email-admin"],
+        "activityImpacts": [
+          {"id": "ai-008", "paragonId": "pg-edr-coverage", "newValue": 0.97}
+        ],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": ["act-edr"],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-ioc-extracted"],
+        "resultArtifactInStateIds": ["asi-rules-updated"]
+      },
+      "proc-recover": {
+        "id": "proc-recover",
+        "name": "Recovery & Lessons Learned",
+        "notes": "Restore services, communicate to stakeholders, and document lessons.",
+        "objectives": ["RECOVERY"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-lead"],
+        "activityImpacts": [
+          {"id": "ai-009", "paragonId": "pg-phish-reporting", "newValue": 0.85},
+          {"id": "ai-010", "paragonId": "pg-training-completion", "newValue": 0.95}
+        ],
+        "externalReferences": [],
+        "relatedReferenceIds": ["ref-001"],
+        "mitreTechniques": [],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-rules-updated"],
+        "resultArtifactInStateIds": ["asi-report-final"]
+      }
+    },
+    "artifacts": {
+      "art-email": {
+        "id": "art-email",
+        "name": "Phishing Email Sample",
+        "stateIds": ["as-email-raw", "as-email-analyzed"]
+      },
+      "art-ioc": {
+        "id": "art-ioc",
+        "name": "Indicators of Compromise",
+        "stateIds": ["as-ioc-draft", "as-ioc-confirmed"]
+      },
+      "art-credentials": {
+        "id": "art-credentials",
+        "name": "Compromised Credentials List",
+        "stateIds": ["as-creds-identified", "as-creds-reset"]
+      },
+      "art-report": {
+        "id": "art-report",
+        "name": "Incident Report",
+        "stateIds": ["as-report-draft", "as-report-final"]
+      }
+    },
+    "artifactStates": {
+      "as-email-raw": {
+        "id": "as-email-raw",
+        "name": "collected",
+        "artifactName": "Phishing Email Sample",
+        "achievedStatus": false,
+        "instanceIds": ["asi-email-collected"]
+      },
+      "as-email-analyzed": {
+        "id": "as-email-analyzed",
+        "name": "analyzed",
+        "artifactName": "Phishing Email Sample",
+        "achievedStatus": false,
+        "instanceIds": ["asi-email-analyzed"]
+      },
+      "as-ioc-draft": {
+        "id": "as-ioc-draft",
+        "name": "extracted",
+        "artifactName": "Indicators of Compromise",
+        "achievedStatus": false,
+        "instanceIds": ["asi-ioc-extracted"]
+      },
+      "as-ioc-confirmed": {
+        "id": "as-ioc-confirmed",
+        "name": "confirmed",
+        "artifactName": "Indicators of Compromise",
+        "achievedStatus": false,
+        "instanceIds": ["asi-ioc-confirmed"]
+      },
+      "as-creds-identified": {
+        "id": "as-creds-identified",
+        "name": "identified",
+        "artifactName": "Compromised Credentials List",
+        "achievedStatus": false,
+        "instanceIds": ["asi-credentials-reset"]
+      },
+      "as-creds-reset": {
+        "id": "as-creds-reset",
+        "name": "reset",
+        "artifactName": "Compromised Credentials List",
+        "achievedStatus": false,
+        "instanceIds": ["asi-creds-complete"]
+      },
+      "as-report-draft": {
+        "id": "as-report-draft",
+        "name": "drafted",
+        "artifactName": "Incident Report",
+        "achievedStatus": false,
+        "instanceIds": ["asi-report-created"]
+      },
+      "as-report-final": {
+        "id": "as-report-final",
+        "name": "finalized",
+        "artifactName": "Incident Report",
+        "achievedStatus": false,
+        "instanceIds": ["asi-report-final"]
+      }
+    },
+    "artifactStateInstances": {
+      "asi-email-collected": {
+        "id": "asi-email-collected",
+        "originatingActivity": "proc-monitor-gateway",
+        "usedByActivity": "proc-header-analysis"
+      },
+      "asi-email-analyzed": {
+        "id": "asi-email-analyzed",
+        "originatingActivity": "proc-payload-analysis",
+        "usedByActivity": "proc-ioc-extraction"
+      },
+      "asi-ioc-extracted": {
+        "id": "asi-ioc-extracted",
+        "originatingActivity": "proc-ioc-extraction",
+        "usedByActivity": "proc-block-sender"
+      },
+      "asi-ioc-confirmed": {
+        "id": "asi-ioc-confirmed",
+        "originatingActivity": "proc-ioc-extraction",
+        "usedByActivity": "proc-update-rules"
+      },
+      "asi-credentials-reset": {
+        "id": "asi-credentials-reset",
+        "originatingActivity": "proc-disable-accounts",
+        "usedByActivity": "proc-reset-credentials"
+      },
+      "asi-creds-complete": {
+        "id": "asi-creds-complete",
+        "originatingActivity": "proc-reset-credentials",
+        "usedByActivity": "proc-recover"
+      },
+      "asi-report-created": {
+        "id": "asi-report-created",
+        "originatingActivity": "proc-triage",
+        "usedByActivity": "proc-analysis"
+      },
+      "asi-report-final": {
+        "id": "asi-report-final",
+        "originatingActivity": "proc-recover",
+        "usedByActivity": null
+      },
+      "asi-rules-updated": {
+        "id": "asi-rules-updated",
+        "originatingActivity": "proc-update-rules",
+        "usedByActivity": "proc-recover"
+      }
+    },
+    "actuators": {
+      "act-gateway": {
+        "id": "act-gateway",
+        "name": "Email Gateway",
+        "actuatorType": "MACHINE"
+      },
+      "act-sandbox": {
+        "id": "act-sandbox",
+        "name": "Malware Sandbox",
+        "actuatorType": "MACHINE"
+      },
+      "act-edr": {
+        "id": "act-edr",
+        "name": "EDR Platform",
+        "actuatorType": "MACHINE"
+      }
+    },
+    "externalReferences": {
+      "ref-001": {
+        "id": "ref-001",
+        "name": "NIST SP 800-61r2",
+        "referenceType": "BEST_PRACTICE"
+      },
+      "ref-002": {
+        "id": "ref-002",
+        "name": "MITRE ATT&CK T1566 Phishing",
+        "referenceType": "BEST_PRACTICE"
+      }
+    },
+    "roles": {
+      "role-analyst": {
+        "id": "role-analyst",
+        "name": "SOC Analyst"
+      },
+      "role-lead": {
+        "id": "role-lead",
+        "name": "Incident Response Lead"
+      },
+      "role-email-admin": {
+        "id": "role-email-admin",
+        "name": "Email Administrator"
+      }
+    },
+    "symbiosis": null
+  },
+  "representation": {
+    "dmViews": {},
+    "pbViews": {}
+  }
+}

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RaccoonIR</title>
+  <link rel="stylesheet" href="css/raccoon-ir.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ============================================================
+       HEADER  (logo + file operations toolbar)
+       ============================================================ -->
+  <div id="app-header">
+    <div class="app-title">
+      <span class="app-logo">🦝</span>
+      <span class="app-name">RaccoonIR</span>
+      <span class="app-subtitle">// Purple Team Incident Response Playbook Planner</span>
+    </div>
+
+    <div class="header-toolbar">
+      <button id="btn-new"      title="New Project">New</button>
+      <button id="btn-open"     title="Open .raccoon-ir.json">Open</button>
+      <button id="btn-library"  title="Open example from the built-in library">Library</button>
+      <button id="btn-save"     title="Save project">Save</button>
+      <span class="sep-btn"></span>
+      <button id="btn-import" title="Import model-only file (.dependencymodel / .raccoon / .json)">Import</button>
+      <button id="btn-export" title="Export model only (no layout data)">Export Model</button>
+      <span class="sep-btn"></span>
+      <button id="btn-undo" title="Undo" disabled>Undo</button>
+      <button id="btn-redo" title="Redo" disabled>Redo</button>
+      <span class="sep-btn"></span>
+      <button id="btn-help" title="Help, Tutorial &amp; Metamodels">? Help</button>
+      <span id="current-filename" class="current-filename-display" title="Current file" style="display:none"></span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       TAB BAR
+       ============================================================ -->
+  <div id="tab-bar">
+    <button class="tab active" data-tab="dm">Dependency Models</button>
+    <button class="tab"        data-tab="pb">Playbooks</button>
+    <button class="tab"        data-tab="metrics">Metrics</button>
+    <button class="tab"        data-tab="symbiosis">SYMBIOSIS</button>
+    <button class="tab"        data-tab="impact">Impact View</button>
+    <button class="tab"        data-tab="mitre">MITRE View</button>
+  </div>
+
+  <!-- ============================================================
+       MAIN CONTENT  (three-pane layout)
+       ============================================================ -->
+  <div id="main-content">
+
+    <!-- ---- Left: Model Explorer ---- -->
+    <div id="model-explorer">
+      <div class="panel-header">
+        <span>Model Explorer</span>
+      </div>
+      <div id="explorer-content">
+        <!-- populated dynamically by app.js -->
+      </div>
+    </div>
+
+    <!-- ---- Resizer: Explorer | Canvas ---- -->
+    <div class="panel-resizer" id="resizer-left"></div>
+
+    <!-- ---- Centre: Canvas area ---- -->
+    <div id="canvas-area">
+
+      <!-- Context-sensitive view toolbar — populated by app.js on tab switch -->
+      <div id="view-toolbar"></div>
+
+      <!-- Stacked view panels; only the active one is visible -->
+      <div id="canvas-container">
+
+        <!-- DM VIEW -->
+        <div id="dm-view" class="view-panel active">
+          <svg id="dm-canvas">
+            <defs>
+              <!-- AND edge arrowhead (green) -->
+              <marker id="dm-arrow" markerWidth="8" markerHeight="6"
+                      refX="7" refY="3" orient="auto">
+                <polygon points="0 0,8 3,0 6" fill="#2e7d32"/>
+              </marker>
+              <!-- OR edge arrowhead (orange) -->
+              <marker id="dm-arrow-or" markerWidth="8" markerHeight="6"
+                      refX="7" refY="3" orient="auto">
+                <polygon points="0 0,8 3,0 6" fill="#e65100"/>
+              </marker>
+              <!-- UNCONTROLLABLE edge arrowhead (grey) -->
+              <marker id="dm-arrow-unc" markerWidth="8" markerHeight="6"
+                      refX="7" refY="3" orient="auto">
+                <polygon points="0 0,8 3,0 6" fill="#546e7a"/>
+              </marker>
+            </defs>
+            <g id="dm-viewport"></g>
+          </svg>
+        </div>
+
+        <!-- PB VIEW -->
+        <div id="pb-view" class="view-panel">
+          <div id="pb-breadcrumb"></div>
+          <svg id="pb-canvas">
+            <defs>
+              <!-- Playbook connection arrowhead (purple) -->
+              <marker id="pb-arrow" markerWidth="8" markerHeight="6"
+                      refX="7" refY="3" orient="auto">
+                <polygon points="0 0,8 3,0 6" fill="#a855f7"/>
+              </marker>
+              <!-- Temporary drag-connect line arrowhead -->
+              <marker id="pb-arrow-temp" markerWidth="8" markerHeight="6"
+                      refX="7" refY="3" orient="auto">
+                <polygon points="0 0,8 3,0 6" fill="#95a5a6"/>
+              </marker>
+            </defs>
+            <g id="pb-viewport"></g>
+          </svg>
+        </div>
+
+        <!-- METRICS VIEW -->
+        <div id="metrics-view" class="view-panel">
+          <div id="metrics-content"></div>
+        </div>
+
+        <!-- SYMBIOSIS VIEW -->
+        <div id="symbiosis-view" class="view-panel">
+          <div id="symbiosis-content"></div>
+        </div>
+
+        <!-- IMPACT VIEW -->
+        <div id="impact-view" class="view-panel">
+          <svg id="impact-canvas">
+            <defs>
+              <marker id="impact-arrow" markerWidth="8" markerHeight="6"
+                      refX="7" refY="3" orient="auto">
+                <polygon points="0 0,8 3,0 6" fill="#c0392b"/>
+              </marker>
+            </defs>
+            <g id="impact-viewport"></g>
+          </svg>
+        </div>
+
+        <!-- MITRE VIEW -->
+        <div id="mitre-view" class="view-panel">
+          <div id="mitre-content" style="padding:16px;overflow-y:auto;height:100%"></div>
+        </div>
+
+      </div><!-- #canvas-container -->
+    </div><!-- #canvas-area -->
+
+    <!-- ---- Resizer: Canvas | Properties ---- -->
+    <div class="panel-resizer" id="resizer-right"></div>
+
+    <!-- ---- Right: Properties panel ---- -->
+    <div id="properties-panel">
+      <div class="panel-header">
+        <span>Properties</span>
+      </div>
+      <div id="properties-content">
+        <p class="no-selection">Select an element to view its properties.</p>
+      </div>
+    </div>
+
+  </div><!-- #main-content -->
+
+  <!-- ============================================================
+       STATUS BAR
+       ============================================================ -->
+  <div id="status-bar">
+    <span id="status-message">Ready</span>
+    <span id="status-coords">0, 0</span>
+  </div>
+
+</div><!-- #app -->
+
+<!-- ============================================================
+     CONTEXT MENU  (shown/hidden via .hidden class)
+     ============================================================ -->
+<div id="context-menu" class="hidden">
+  <ul id="context-menu-items"></ul>
+</div>
+
+<!-- ============================================================
+     MODAL  (shown/hidden via .hidden class)
+     ============================================================ -->
+<div id="modal-overlay" class="hidden">
+  <div id="modal-dialog">
+    <div id="modal-header">Dialog</div>
+    <div id="modal-body"></div>
+    <div id="modal-footer">
+      <button id="modal-cancel">Cancel</button>
+      <button id="modal-ok" class="primary">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     HIDDEN FILE INPUT  (triggered programmatically)
+     ============================================================ -->
+<input type="file" id="file-input"
+       accept=".json,.raccoon,.dependencymodel"
+       style="display:none">
+
+<!-- ============================================================
+     SCRIPTS  (load order: models → metrics → storage → editors → app)
+     ============================================================ -->
+<script src="js/models.js"></script>
+<script src="js/metrics.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/dm-editor.js"></script>
+<script src="js/pb-editor.js"></script>
+<script src="js/impact-view.js"></script>
+<script src="js/metamodel-data.js"></script>
+<script src="js/help.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
