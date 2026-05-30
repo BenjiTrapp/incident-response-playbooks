@@ -309,6 +309,11 @@ class PBEditor {
       }
     }
 
+    // Compute step order via topological sort for step numbering
+    const sorted = this._topoSort(proc);
+    const stepMap = {};
+    sorted.forEach((id, idx) => { stepMap[id] = idx + 1; });
+
     for (const subId of proc.subProcessIds) {
       const sub = this.project.model.processes[subId];
       if (!sub) continue;
@@ -318,13 +323,13 @@ class PBEditor {
       if (this.expandedId && subId !== this.expandedId && pos.y >= expandedBottom) {
         renderY += expansionHeight;
       }
-      g.appendChild(this._buildActivity(sub, pos.x, renderY));
+      g.appendChild(this._buildActivity(sub, pos.x, renderY, stepMap[subId]));
     }
 
     this.viewport.appendChild(g);
   }
 
-  _buildActivity(proc, x, y) {
+  _buildActivity(proc, x, y, stepNumber) {
     const W = 160, H = 60;
     const isSelected   = proc.id === this.selectedId;
     const isCompleted  = proc.status === STATUS_ENUM.COMPLETED;
@@ -343,6 +348,24 @@ class PBEditor {
     rect.setAttribute('stroke', isSelected ? '#c084fc' : (isCompleted ? '#2ecc71' : (hasChildren ? '#546e7a' : '#a855f7')));
     rect.setAttribute('stroke-width', isSelected ? '2' : '1.5');
     g.appendChild(rect);
+
+    // Step number badge (top-left)
+    if (stepNumber != null) {
+      const badgeBg = this._svgEl('circle');
+      badgeBg.setAttribute('cx', 12); badgeBg.setAttribute('cy', 12);
+      badgeBg.setAttribute('r', 9);
+      badgeBg.setAttribute('fill', '#a855f7'); badgeBg.setAttribute('opacity', '0.9');
+      badgeBg.setAttribute('pointer-events', 'none');
+      g.appendChild(badgeBg);
+      const badgeText = this._svgEl('text');
+      badgeText.setAttribute('x', 12); badgeText.setAttribute('y', 16);
+      badgeText.setAttribute('text-anchor', 'middle');
+      badgeText.setAttribute('font-size', '9'); badgeText.setAttribute('font-weight', 'bold');
+      badgeText.setAttribute('fill', '#fff');
+      badgeText.setAttribute('pointer-events', 'none');
+      badgeText.textContent = stepNumber;
+      g.appendChild(badgeText);
+    }
 
     // Status bar (top edge)
     const statusBar = this._svgEl('rect');
@@ -507,21 +530,66 @@ class PBEditor {
 
   _autoLayout(proc, view) {
     const NW = 160, NH = 60;
-    const HGAP = 50, VGAP = 80;
-    const COLS = Math.ceil(Math.sqrt(proc.subProcessIds.length));
+    const HGAP = 60, VGAP = 40;
 
-    // Build a simple topological/grid layout
-    // Try to order by connection dependencies
-    const ordered = this._topoSort(proc);
+    // Build dependency graph for topological layering
+    const subSet = new Set(proc.subProcessIds);
+    const inDegree = {};
+    const adj = {};
+    const reverseAdj = {};
 
-    let col = 0, row = 0;
-    for (const id of ordered) {
-      view.nodePositions[id] = {
-        x: 60 + col * (NW + HGAP),
-        y: 60 + row * (NH + VGAP)
-      };
-      col++;
-      if (col >= COLS) { col = 0; row++; }
+    for (const id of proc.subProcessIds) {
+      inDegree[id] = 0;
+      adj[id] = [];
+      reverseAdj[id] = [];
+    }
+
+    for (const inst of Object.values(this.project.model.artifactStateInstances)) {
+      if (subSet.has(inst.originatingActivity) && subSet.has(inst.usedByActivity)) {
+        if (!adj[inst.originatingActivity].includes(inst.usedByActivity)) {
+          adj[inst.originatingActivity].push(inst.usedByActivity);
+          reverseAdj[inst.usedByActivity].push(inst.originatingActivity);
+          inDegree[inst.usedByActivity]++;
+        }
+      }
+    }
+
+    // Assign layers using longest-path layering (ensures sequential left-to-right flow)
+    const layer = {};
+    const sorted = this._topoSort(proc);
+
+    for (const id of sorted) {
+      const predecessors = reverseAdj[id] || [];
+      if (predecessors.length === 0) {
+        layer[id] = 0;
+      } else {
+        layer[id] = Math.max(...predecessors.map(p => (layer[p] || 0) + 1));
+      }
+    }
+
+    // Group nodes by layer
+    const layers = {};
+    for (const id of proc.subProcessIds) {
+      const l = layer[id] || 0;
+      if (!layers[l]) layers[l] = [];
+      layers[l].push(id);
+    }
+
+    // Position: each layer is a column (left to right), nodes within a layer stacked vertically
+    const layerKeys = Object.keys(layers).map(Number).sort((a, b) => a - b);
+    const startX = 60, startY = 60;
+
+    for (const l of layerKeys) {
+      const nodesInLayer = layers[l];
+      const totalHeight = nodesInLayer.length * NH + (nodesInLayer.length - 1) * VGAP;
+      const offsetY = startY - totalHeight / 2 + (layerKeys.length > 1 ? totalHeight / 2 : 0);
+
+      nodesInLayer.forEach((id, idx) => {
+        view.nodePositions[id] = {
+          x: startX + l * (NW + HGAP),
+          y: offsetY + idx * (NH + VGAP)
+        };
+      });
     }
   }
 
