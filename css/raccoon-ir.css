@@ -52,6 +52,7 @@ body {
 
 .app-title { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .app-logo { font-size: 20px; }
+.app-logo-img { height: 44px; vertical-align: middle; margin-right: 8px; image-rendering: pixelated; }
 .app-name { font-size: 15px; font-weight: 700; color: var(--accent); letter-spacing: 0.5px; }
 .app-subtitle { font-size: 11px; color: var(--text-muted); display: none; }
 @media (min-width: 900px) { .app-subtitle { display: block; } }

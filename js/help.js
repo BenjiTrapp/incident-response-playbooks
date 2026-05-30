@@ -896,7 +896,7 @@ const HelpPanel = {
   _renderAbout(container) {
     container.innerHTML = `
 <div class="about-wrap">
-  <div class="about-logo">🦝 RaccoonIR</div>
+  <div class="about-logo"><img src="raccoon-ir-logo.png" alt="RaccoonIR" style="height:80px;vertical-align:middle;margin-right:8px;">RaccoonIR</div>
   <div class="about-subtitle">// Purple Team Incident Response Playbook Planner</div>
 
   <div class="about-section">

@@ -23,5 +23,20 @@
     "filename": "drive-by-compromise-t1189.json",
     "name": "Drive-by Compromise Response (T1189)",
     "description": "Web-based exploitation response covering exploit kits, malicious redirects, and C2 beaconing. ATT&CK: T1189, T1203, T1071. D3FEND: Web Filtering, Browser Isolation, URL Analysis."
+  },
+  {
+    "filename": "supply-chain-t1195.json",
+    "name": "Supply Chain Compromise Response (T1195)",
+    "description": "Response playbook for compromised software supply chains including dependency poisoning and update hijacking. ATT&CK: T1195, T1059, T1105. D3FEND: Software Verification, Hash Validation, Network Traffic Analysis."
+  },
+  {
+    "filename": "insider-threat-t1078.json",
+    "name": "Insider Threat Response (T1078)",
+    "description": "Insider threat investigation playbook covering privilege abuse, data staging, and account misuse. ATT&CK: T1078, T1074, T1530. D3FEND: User Behavior Analysis, Access Modeling, Session Duration Analysis."
+  },
+  {
+    "filename": "data-exfiltration-t1041.json",
+    "name": "Data Exfiltration Response (T1041)",
+    "description": "Data theft response covering C2 exfiltration, staging, and archive collection. ATT&CK: T1041, T1560, T1048. D3FEND: Network Traffic Analysis, Data Loss Prevention, Outbound Traffic Filtering."
   }
 ]

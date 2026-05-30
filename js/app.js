@@ -176,6 +176,22 @@ class RaccoonIRApp {
     if (tab === 'symbiosis') this._renderSymbiosis();
     if (tab === 'impact')   this._renderImpactView();
     if (tab === 'mitre')    this._renderMitreView();
+    // Auto-select first DM or root process if none selected
+    if (tab === 'dm' && this.dmEditor && !this.dmEditor.dm) {
+      const firstDM = Object.values(this.project.model.dependencyModels)[0];
+      if (firstDM) this._selectDM(firstDM.id);
+    }
+    if (tab === 'pb') {
+      if (this.pbEditor) {
+        if (!this.pbEditor.currentProcessId) {
+          const firstProc = Registry.rootProcesses(this.project)[0];
+          if (firstProc) this._selectRootProcess(firstProc.id);
+        } else {
+          // Re-render in case the canvas was hidden when process was set
+          this.pbEditor.render();
+        }
+      }
+    }
   }
 
   /* ---- View Toolbar ---- */
