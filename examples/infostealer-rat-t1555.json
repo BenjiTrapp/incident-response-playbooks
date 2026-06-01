@@ -1,0 +1,1549 @@
+{
+  "name": "Infostealer with RAT Deployment on Developer Workstation (T1555)",
+  "version": "1.0",
+  "snapshots": [],
+  "baseline": null,
+  "createdAt": "2025-06-01T00:00:00.000Z",
+  "model": {
+    "dependencyModels": {
+      "dm-001": {
+        "id": "dm-001",
+        "name": "Developer Environment Integrity & Credential Security",
+        "rootId": "pg-root",
+        "paragons": {
+          "pg-root": {
+            "id": "pg-root",
+            "description": "Developer Environment Integrity & Credential Security",
+            "type": "AND",
+            "leafProbability": 1.0,
+            "childIds": ["pg-c2-neutralized", "pg-credentials-secured", "pg-malware-eradicated", "pg-supply-chain-verified"],
+            "criticalThreshold": 0.5,
+            "notifyMode": "REQUEST_APPROVAL",
+            "stakeholders": [{"name": "CISO", "contact": "ciso@example.com", "roleId": null}, {"name": "Engineering Lead", "contact": "eng-lead@example.com", "roleId": null}]
+          },
+          "pg-c2-neutralized": {
+            "id": "pg-c2-neutralized",
+            "description": "C2 Communication Neutralized",
+            "type": "AND",
+            "leafProbability": 1.0,
+            "childIds": ["pg-c2-blocked", "pg-domain-takedown", "pg-network-isolated"],
+            "criticalThreshold": 0.7,
+            "notifyMode": "REQUEST_APPROVAL",
+            "stakeholders": []
+          },
+          "pg-credentials-secured": {
+            "id": "pg-credentials-secured",
+            "description": "All Stolen Credentials Invalidated",
+            "type": "AND",
+            "leafProbability": 1.0,
+            "childIds": ["pg-passwords-rotated", "pg-tokens-revoked", "pg-sessions-terminated", "pg-secrets-rotated"],
+            "criticalThreshold": 0.8,
+            "notifyMode": "REQUEST_APPROVAL",
+            "stakeholders": []
+          },
+          "pg-malware-eradicated": {
+            "id": "pg-malware-eradicated",
+            "description": "Malware Fully Eradicated",
+            "type": "AND",
+            "leafProbability": 1.0,
+            "childIds": ["pg-infostealer-removed", "pg-rat-removed", "pg-persistence-cleared"],
+            "criticalThreshold": 0.8,
+            "notifyMode": "REQUEST_APPROVAL",
+            "stakeholders": []
+          },
+          "pg-supply-chain-verified": {
+            "id": "pg-supply-chain-verified",
+            "description": "Source Code & CI/CD Integrity Verified",
+            "type": "AND",
+            "leafProbability": 1.0,
+            "childIds": ["pg-code-repos-clean", "pg-cicd-verified"],
+            "criticalThreshold": 0.7,
+            "notifyMode": "REQUEST_APPROVAL",
+            "stakeholders": []
+          },
+          "pg-c2-blocked": {
+            "id": "pg-c2-blocked",
+            "description": "C2 domains/IPs blocked at all egress points",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.4,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-domain-takedown": {
+            "id": "pg-domain-takedown",
+            "description": "Malicious domains takedown requested",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.3,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-network-isolated": {
+            "id": "pg-network-isolated",
+            "description": "Affected workstation network-isolated",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.6,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-passwords-rotated": {
+            "id": "pg-passwords-rotated",
+            "description": "All stored/cached passwords rotated",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.35,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-tokens-revoked": {
+            "id": "pg-tokens-revoked",
+            "description": "All OAuth/API/PAT tokens revoked",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.4,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-sessions-terminated": {
+            "id": "pg-sessions-terminated",
+            "description": "All active sessions terminated",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.5,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-secrets-rotated": {
+            "id": "pg-secrets-rotated",
+            "description": "Developer secrets (SSH keys, signing keys, vault tokens) rotated",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.3,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-infostealer-removed": {
+            "id": "pg-infostealer-removed",
+            "description": "Infostealer binary and artifacts removed",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.5,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-rat-removed": {
+            "id": "pg-rat-removed",
+            "description": "RAT and C2 implant removed",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.45,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-persistence-cleared": {
+            "id": "pg-persistence-cleared",
+            "description": "All persistence mechanisms cleared",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.4,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-code-repos-clean": {
+            "id": "pg-code-repos-clean",
+            "description": "Source code repositories verified clean (no backdoors injected)",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.4,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-cicd-verified": {
+            "id": "pg-cicd-verified",
+            "description": "CI/CD pipelines and build artifacts verified",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.4,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          }
+        }
+      }
+    },
+    "organisations": {
+      "org-001": {
+        "id": "org-001",
+        "name": "Incident Response Team",
+        "roleIds": ["role-analyst", "role-commander", "role-forensics", "role-sysadmin", "role-devops", "role-network-admin"],
+        "rootProcessIds": ["proc-root"]
+      }
+    },
+    "processes": {
+      "proc-root": {
+        "id": "proc-root",
+        "name": "Infostealer & RAT Incident Response",
+        "notes": "End-to-end response for infostealer execution on developer workstation with second-stage RAT deployment and C2 beaconing. Covers TTP hunting, C2 takedown, credential rotation, privilege assessment, supply chain verification, and full workstation rebuild.",
+        "objectives": [],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-commander"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": ["ref-001", "ref-002", "ref-003"],
+        "mitreTechniques": [
+          {"techniqueId": "T1555", "techniqueName": "Credentials from Password Stores", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1555/"},
+          {"techniqueId": "T1219", "techniqueName": "Remote Access Software", "tactic": "Command and Control", "url": "https://attack.mitre.org/techniques/T1219/"}
+        ],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-detect", "proc-analysis", "proc-contain", "proc-hunt", "proc-takedown", "proc-privilege-assessment", "proc-eradicate", "proc-recover", "proc-lessons"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-detect": {
+        "id": "proc-detect",
+        "name": "Detection",
+        "notes": "Detect infostealer execution via EDR behavioral alerts (credential store access, browser data harvesting) and C2 beaconing patterns from second-stage RAT.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "AUTOMATIC",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1555.003", "techniqueName": "Credentials from Web Browsers", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1555/003/"},
+          {"techniqueId": "T1071.001", "techniqueName": "Web Protocols", "tactic": "Command and Control", "url": "https://attack.mitre.org/techniques/T1071/001/"}
+        ],
+        "mitreDefend": [
+          {"techniqueId": "D3-OSM", "techniqueName": "Operating System Monitoring", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:OperatingSystemMonitoring"},
+          {"techniqueId": "D3-NTCD", "techniqueName": "Network Traffic Community Deviation", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:NetworkTrafficCommunityDeviation"}
+        ],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-detect-edr", "proc-detect-c2-beacon", "proc-detect-credential-access"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-alert-generated"]
+      },
+      "proc-detect-edr": {
+        "id": "proc-detect-edr",
+        "name": "EDR Behavioral Detection",
+        "notes": "EDR detects suspicious process chain: user-initiated download -> execution of unsigned/low-reputation binary -> child processes accessing credential stores (Login Data, cookies.sqlite, Windows Credential Manager, SSH key files).",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "AUTOMATIC",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1204.002", "techniqueName": "Malicious File", "tactic": "Execution", "url": "https://attack.mitre.org/techniques/T1204/002/"},
+          {"techniqueId": "T1555.003", "techniqueName": "Credentials from Web Browsers", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1555/003/"}
+        ],
+        "mitreDefend": [
+          {"techniqueId": "D3-PSA", "techniqueName": "Process Spawn Analysis", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:ProcessSpawnAnalysis"},
+          {"techniqueId": "D3-OSM", "techniqueName": "Operating System Monitoring", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:OperatingSystemMonitoring"}
+        ],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-alert-generated"]
+      },
+      "proc-detect-c2-beacon": {
+        "id": "proc-detect-c2-beacon",
+        "name": "Detect C2 Beaconing",
+        "notes": "Network detection identifies periodic beaconing pattern (regular intervals with jitter) to suspicious domains/IPs. May use HTTPS with domain fronting or DNS tunneling for covert channel.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "AUTOMATIC",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1071.001", "techniqueName": "Web Protocols", "tactic": "Command and Control", "url": "https://attack.mitre.org/techniques/T1071/001/"},
+          {"techniqueId": "T1573.002", "techniqueName": "Asymmetric Cryptography", "tactic": "Command and Control", "url": "https://attack.mitre.org/techniques/T1573/002/"},
+          {"techniqueId": "T1568.002", "techniqueName": "Domain Generation Algorithms", "tactic": "Command and Control", "url": "https://attack.mitre.org/techniques/T1568/002/"}
+        ],
+        "mitreDefend": [
+          {"techniqueId": "D3-NTCD", "techniqueName": "Network Traffic Community Deviation", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:NetworkTrafficCommunityDeviation"},
+          {"techniqueId": "D3-DNSA", "techniqueName": "DNS Traffic Analysis", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:DNSTrafficAnalysis"}
+        ],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-detect-credential-access": {
+        "id": "proc-detect-credential-access",
+        "name": "Detect Credential Store Access",
+        "notes": "Alert on unauthorized access to browser credential databases (Login Data, Cookies, Web Data), Windows Credential Manager (vaultcmd), SSH private keys (~/.ssh/), and application tokens (~/.config/, environment variables).",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "AUTOMATIC",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1555.003", "techniqueName": "Credentials from Web Browsers", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1555/003/"},
+          {"techniqueId": "T1555.004", "techniqueName": "Windows Credential Manager", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1555/004/"},
+          {"techniqueId": "T1552.004", "techniqueName": "Private Keys", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1552/004/"},
+          {"techniqueId": "T1539", "techniqueName": "Steal Web Session Cookie", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1539/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-CCSA", "techniqueName": "Credential Compromise Scope Analysis", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:CredentialCompromiseScopeAnalysis"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-analysis": {
+        "id": "proc-analysis",
+        "name": "Analysis & Scoping",
+        "notes": "Determine infostealer family, identify all exfiltrated credential types, analyze RAT capabilities, map C2 infrastructure, and determine full scope of stolen data.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-forensics", "role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1005", "techniqueName": "Data from Local System", "tactic": "Collection", "url": "https://attack.mitre.org/techniques/T1005/"},
+          {"techniqueId": "T1119", "techniqueName": "Automated Collection", "tactic": "Collection", "url": "https://attack.mitre.org/techniques/T1119/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-MBT", "techniqueName": "Memory Boundary Tracking", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:MemoryBoundaryTracking"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-identify-stealer", "proc-analyze-exfil", "proc-analyze-rat", "proc-map-c2"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-alert-generated"],
+        "resultArtifactInStateIds": ["asi-scope-determined"]
+      },
+      "proc-identify-stealer": {
+        "id": "proc-identify-stealer",
+        "name": "Identify Infostealer Family",
+        "notes": "Analyze malware sample to identify family (RedLine, Raccoon, Vidar, Lumma, StealC, etc.). Determine capabilities: browser credentials, crypto wallets, FTP clients, email clients, Discord tokens, VPN configs, SSH keys. Submit hash to VirusTotal/MalwareBazaar for intelligence.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-forensics"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1204.002", "techniqueName": "Malicious File", "tactic": "Execution", "url": "https://attack.mitre.org/techniques/T1204/002/"},
+          {"techniqueId": "T1027", "techniqueName": "Obfuscated Files or Information", "tactic": "Defense Evasion", "url": "https://attack.mitre.org/techniques/T1027/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-FH", "techniqueName": "File Hashing", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:FileHashing"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-analyze-exfil": {
+        "id": "proc-analyze-exfil",
+        "name": "Determine Exfiltrated Credentials",
+        "notes": "Based on stealer capabilities and workstation state, enumerate ALL potentially stolen credentials: (1) Browser saved passwords for all profiles, (2) Browser session cookies (GitHub, cloud consoles, internal tools), (3) SSH private keys (~/.ssh/), (4) Git credential helpers, (5) Cloud CLI tokens (aws, az, gcloud), (6) IDE stored credentials, (7) VPN/RDP saved credentials, (8) Windows Credential Manager entries, (9) Application-specific tokens (Slack, Teams, npm, PyPI), (10) Environment variables with secrets.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-forensics", "role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1555.003", "techniqueName": "Credentials from Web Browsers", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1555/003/"},
+          {"techniqueId": "T1555.004", "techniqueName": "Windows Credential Manager", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1555/004/"},
+          {"techniqueId": "T1552.001", "techniqueName": "Credentials In Files", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1552/001/"},
+          {"techniqueId": "T1552.004", "techniqueName": "Private Keys", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1552/004/"},
+          {"techniqueId": "T1539", "techniqueName": "Steal Web Session Cookie", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1539/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-CCSA", "techniqueName": "Credential Compromise Scope Analysis", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:CredentialCompromiseScopeAnalysis"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-analyze-rat": {
+        "id": "proc-analyze-rat",
+        "name": "Analyze RAT Capabilities",
+        "notes": "Reverse-engineer or identify the second-stage RAT. Determine capabilities: keylogging, screen capture, file exfiltration, remote shell, lateral movement modules, persistence mechanisms. Identify if RAT has self-propagation or credential harvesting beyond initial stealer.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-forensics"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1219", "techniqueName": "Remote Access Software", "tactic": "Command and Control", "url": "https://attack.mitre.org/techniques/T1219/"},
+          {"techniqueId": "T1056.001", "techniqueName": "Keylogging", "tactic": "Collection", "url": "https://attack.mitre.org/techniques/T1056/001/"},
+          {"techniqueId": "T1113", "techniqueName": "Screen Capture", "tactic": "Collection", "url": "https://attack.mitre.org/techniques/T1113/"},
+          {"techniqueId": "T1059", "techniqueName": "Command and Scripting Interpreter", "tactic": "Execution", "url": "https://attack.mitre.org/techniques/T1059/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-MBT", "techniqueName": "Memory Boundary Tracking", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:MemoryBoundaryTracking"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-map-c2": {
+        "id": "proc-map-c2",
+        "name": "Map C2 Infrastructure",
+        "notes": "Extract all C2 indicators: domains, IPs, ports, communication protocols, beacon intervals, fallback channels. Use passive DNS, WHOIS, certificate transparency logs to map related infrastructure. Identify hosting providers for takedown requests.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1071.001", "techniqueName": "Web Protocols", "tactic": "Command and Control", "url": "https://attack.mitre.org/techniques/T1071/001/"},
+          {"techniqueId": "T1105", "techniqueName": "Ingress Tool Transfer", "tactic": "Command and Control", "url": "https://attack.mitre.org/techniques/T1105/"},
+          {"techniqueId": "T1573", "techniqueName": "Encrypted Channel", "tactic": "Command and Control", "url": "https://attack.mitre.org/techniques/T1573/"}
+        ],
+        "mitreDefend": [
+          {"techniqueId": "D3-DNSA", "techniqueName": "DNS Traffic Analysis", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:DNSTrafficAnalysis"},
+          {"techniqueId": "D3-NTCD", "techniqueName": "Network Traffic Community Deviation", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:NetworkTrafficCommunityDeviation"}
+        ],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-scope-determined"]
+      },
+      "proc-contain": {
+        "id": "proc-contain",
+        "name": "Containment",
+        "notes": "Immediate containment: isolate workstation, block C2 at all egress points, rotate all potentially compromised credentials, terminate all active sessions, revoke all tokens.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-commander", "role-sysadmin", "role-network-admin"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [
+          {"techniqueId": "D3-NI", "techniqueName": "Network Isolation", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:NetworkIsolation"},
+          {"techniqueId": "D3-AL", "techniqueName": "Account Locking", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:AccountLocking"},
+          {"techniqueId": "D3-CRO", "techniqueName": "Credential Rotation", "tactic": "Harden", "url": "https://d3fend.mitre.org/technique/d3f:CredentialRotation"}
+        ],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-isolate-workstation", "proc-block-c2-network", "proc-rotate-credentials", "proc-terminate-sessions", "proc-revoke-tokens"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-alert-generated"],
+        "resultArtifactInStateIds": ["asi-contained"]
+      },
+      "proc-isolate-workstation": {
+        "id": "proc-isolate-workstation",
+        "name": "Isolate Affected Workstation",
+        "notes": "Immediately network-isolate the developer workstation via EDR isolation feature or switch port shutdown. Maintain host powered on for forensic evidence preservation. Do NOT allow developer to continue using the device.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-network-isolated",
+        "associatedRoleIds": ["role-sysadmin"],
+        "activityImpacts": [{"id": "ai-001", "paragonId": "pg-network-isolated", "newValue": 0.95}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [{"techniqueId": "D3-NI", "techniqueName": "Network Isolation", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:NetworkIsolation"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-block-c2-network": {
+        "id": "proc-block-c2-network",
+        "name": "Block C2 at Network Egress",
+        "notes": "Block all identified C2 domains and IPs at: (1) Perimeter firewall, (2) DNS resolver (sinkhole), (3) Web proxy/CASB, (4) EDR network containment rules. Apply blocks organization-wide to detect other potentially infected hosts.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-c2-blocked",
+        "associatedRoleIds": ["role-network-admin"],
+        "activityImpacts": [{"id": "ai-002", "paragonId": "pg-c2-blocked", "newValue": 0.92}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1071.001", "techniqueName": "Web Protocols", "tactic": "Command and Control", "url": "https://attack.mitre.org/techniques/T1071/001/"}
+        ],
+        "mitreDefend": [
+          {"techniqueId": "D3-DNSDL", "techniqueName": "DNS Denylisting", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:DNSDenylisting"},
+          {"techniqueId": "D3-NI", "techniqueName": "Network Isolation", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:NetworkIsolation"}
+        ],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-rotate-credentials": {
+        "id": "proc-rotate-credentials",
+        "name": "Rotate All Compromised Credentials",
+        "notes": "Rotate ALL credentials that were accessible from the developer workstation: (1) AD account password, (2) All browser-saved passwords (enumerate from browser profile), (3) SSH keys - generate new keypairs and remove old public keys from authorized_keys on all servers, (4) Cloud CLI credentials (aws configure, az login tokens), (5) Package registry tokens (npm, PyPI, NuGet), (6) Git credentials and GitHub PATs, (7) VPN certificates, (8) Database connection strings, (9) Any secrets in IDE configurations or .env files.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-passwords-rotated",
+        "associatedRoleIds": ["role-sysadmin", "role-devops"],
+        "activityImpacts": [
+          {"id": "ai-003", "paragonId": "pg-passwords-rotated", "newValue": 0.93},
+          {"id": "ai-004", "paragonId": "pg-secrets-rotated", "newValue": 0.90}
+        ],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1555", "techniqueName": "Credentials from Password Stores", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1555/"},
+          {"techniqueId": "T1552.004", "techniqueName": "Private Keys", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1552/004/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-CRO", "techniqueName": "Credential Rotation", "tactic": "Harden", "url": "https://d3fend.mitre.org/technique/d3f:CredentialRotation"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-terminate-sessions": {
+        "id": "proc-terminate-sessions",
+        "name": "Terminate All Active Sessions",
+        "notes": "Terminate ALL sessions for the affected developer account: (1) Kill all RDP/SSH sessions, (2) Purge Kerberos tickets (klist purge) on all machines the account accessed, (3) Invalidate AD refresh tokens, (4) Sign out of all browser sessions (Google, Microsoft, GitHub, etc.), (5) Terminate VPN sessions, (6) Force re-authentication on all SSO-protected applications.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-sessions-terminated",
+        "associatedRoleIds": ["role-sysadmin"],
+        "activityImpacts": [{"id": "ai-005", "paragonId": "pg-sessions-terminated", "newValue": 0.94}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1550.001", "techniqueName": "Application Access Token", "tactic": "Lateral Movement", "url": "https://attack.mitre.org/techniques/T1550/001/"},
+          {"techniqueId": "T1539", "techniqueName": "Steal Web Session Cookie", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1539/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-AL", "techniqueName": "Account Locking", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:AccountLocking"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-revoke-tokens": {
+        "id": "proc-revoke-tokens",
+        "name": "Revoke All API Tokens & OAuth Grants",
+        "notes": "Revoke: (1) All GitHub Personal Access Tokens, (2) GitHub OAuth app authorizations, (3) Cloud provider service principals/access keys, (4) npm/PyPI/NuGet publish tokens, (5) Slack/Teams bot tokens, (6) CI/CD service connections and pipeline tokens, (7) Any API keys accessible from the workstation.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-tokens-revoked",
+        "associatedRoleIds": ["role-devops"],
+        "activityImpacts": [{"id": "ai-006", "paragonId": "pg-tokens-revoked", "newValue": 0.93}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1528", "techniqueName": "Steal Application Access Token", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1528/"},
+          {"techniqueId": "T1550.001", "techniqueName": "Application Access Token", "tactic": "Lateral Movement", "url": "https://attack.mitre.org/techniques/T1550/001/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-CRO", "techniqueName": "Credential Rotation", "tactic": "Harden", "url": "https://d3fend.mitre.org/technique/d3f:CredentialRotation"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-contained"]
+      },
+      "proc-hunt": {
+        "id": "proc-hunt",
+        "name": "Threat Hunting for TTPs",
+        "notes": "Proactively hunt across the environment for indicators of the same infostealer/RAT on other endpoints, lateral movement from the compromised workstation, and use of stolen credentials.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst", "role-forensics"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1078", "techniqueName": "Valid Accounts", "tactic": "Initial Access", "url": "https://attack.mitre.org/techniques/T1078/"},
+          {"techniqueId": "T1021", "techniqueName": "Remote Services", "tactic": "Lateral Movement", "url": "https://attack.mitre.org/techniques/T1021/"}
+        ],
+        "mitreDefend": [
+          {"techniqueId": "D3-OSM", "techniqueName": "Operating System Monitoring", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:OperatingSystemMonitoring"},
+          {"techniqueId": "D3-UGLPA", "techniqueName": "User Geolocation Logon Pattern Analysis", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:UserGeolocationLogonPatternAnalysis"}
+        ],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-hunt-iocs", "proc-hunt-lateral", "proc-hunt-credential-use", "proc-hunt-other-endpoints"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-scope-determined"],
+        "resultArtifactInStateIds": ["asi-hunt-complete"]
+      },
+      "proc-hunt-iocs": {
+        "id": "proc-hunt-iocs",
+        "name": "Hunt for IOCs Across Environment",
+        "notes": "Search all endpoints for: malware file hashes, malicious process names, suspicious registry keys, scheduled tasks matching RAT persistence, C2 beacon patterns in network logs. Use EDR retrospective search and SIEM correlation.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1547.001", "techniqueName": "Registry Run Keys / Startup Folder", "tactic": "Persistence", "url": "https://attack.mitre.org/techniques/T1547/001/"},
+          {"techniqueId": "T1053.005", "techniqueName": "Scheduled Task", "tactic": "Persistence", "url": "https://attack.mitre.org/techniques/T1053/005/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-FH", "techniqueName": "File Hashing", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:FileHashing"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-hunt-lateral": {
+        "id": "proc-hunt-lateral",
+        "name": "Hunt for Lateral Movement",
+        "notes": "Search for lateral movement from the compromised workstation: (1) RDP connections to other hosts, (2) SMB/WinRM sessions initiated, (3) SSH connections to servers, (4) kubectl/cloud CLI commands executed against clusters, (5) Source code repository access from unusual locations.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1021.001", "techniqueName": "Remote Desktop Protocol", "tactic": "Lateral Movement", "url": "https://attack.mitre.org/techniques/T1021/001/"},
+          {"techniqueId": "T1021.004", "techniqueName": "SSH", "tactic": "Lateral Movement", "url": "https://attack.mitre.org/techniques/T1021/004/"},
+          {"techniqueId": "T1021.006", "techniqueName": "Windows Remote Management", "tactic": "Lateral Movement", "url": "https://attack.mitre.org/techniques/T1021/006/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-UGLPA", "techniqueName": "User Geolocation Logon Pattern Analysis", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:UserGeolocationLogonPatternAnalysis"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-hunt-credential-use": {
+        "id": "proc-hunt-credential-use",
+        "name": "Hunt for Stolen Credential Usage",
+        "notes": "Search authentication logs for use of stolen credentials from unexpected sources/locations: (1) GitHub audit log for PAT usage, (2) Cloud provider CloudTrail/Activity Log for API key usage, (3) VPN authentication from unusual geolocations, (4) Package registry publish events, (5) CI/CD pipeline modifications.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst", "role-devops"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1078", "techniqueName": "Valid Accounts", "tactic": "Initial Access", "url": "https://attack.mitre.org/techniques/T1078/"},
+          {"techniqueId": "T1195.002", "techniqueName": "Compromise Software Supply Chain", "tactic": "Initial Access", "url": "https://attack.mitre.org/techniques/T1195/002/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-UGLPA", "techniqueName": "User Geolocation Logon Pattern Analysis", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:UserGeolocationLogonPatternAnalysis"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-hunt-other-endpoints": {
+        "id": "proc-hunt-other-endpoints",
+        "name": "Hunt for Infostealer on Other Endpoints",
+        "notes": "Sweep all developer workstations and build servers for same infostealer family. Check if initial infection vector (e.g., fake tool download, compromised package, malicious ad) may have affected others on the team.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1204.002", "techniqueName": "Malicious File", "tactic": "Execution", "url": "https://attack.mitre.org/techniques/T1204/002/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-FH", "techniqueName": "File Hashing", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:FileHashing"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-hunt-complete"]
+      },
+      "proc-takedown": {
+        "id": "proc-takedown",
+        "name": "C2 & Malicious Infrastructure Takedown",
+        "notes": "Request takedown of malicious C2 infrastructure and distribution sites to protect other potential victims and prevent attacker from maintaining access.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst", "role-commander"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1583.001", "techniqueName": "Domains", "tactic": "Resource Development", "url": "https://attack.mitre.org/techniques/T1583/001/"},
+          {"techniqueId": "T1583.003", "techniqueName": "Virtual Private Server", "tactic": "Resource Development", "url": "https://attack.mitre.org/techniques/T1583/003/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-DNSDL", "techniqueName": "DNS Denylisting", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:DNSDenylisting"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-takedown-hosting", "proc-takedown-domain", "proc-takedown-distribution", "proc-share-iocs"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-scope-determined"],
+        "resultArtifactInStateIds": ["asi-takedown-requested"]
+      },
+      "proc-takedown-hosting": {
+        "id": "proc-takedown-hosting",
+        "name": "Request Hosting Provider Takedown",
+        "notes": "Submit abuse reports to hosting providers (AWS, Azure, DigitalOcean, bulletproof hosters) hosting C2 servers. Include evidence of malicious activity, IOCs, and request immediate suspension.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1583.003", "techniqueName": "Virtual Private Server", "tactic": "Resource Development", "url": "https://attack.mitre.org/techniques/T1583/003/"}],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-takedown-domain": {
+        "id": "proc-takedown-domain",
+        "name": "Request Domain Registrar Takedown",
+        "notes": "Submit abuse complaints to domain registrars for C2 domains. Request suspension/sinkholing. Engage CERT/national authority for expedited takedowns if registrar is unresponsive.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-domain-takedown",
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [{"id": "ai-007", "paragonId": "pg-domain-takedown", "newValue": 0.6}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1583.001", "techniqueName": "Domains", "tactic": "Resource Development", "url": "https://attack.mitre.org/techniques/T1583/001/"}],
+        "mitreDefend": [{"techniqueId": "D3-DNSDL", "techniqueName": "DNS Denylisting", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:DNSDenylisting"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-takedown-distribution": {
+        "id": "proc-takedown-distribution",
+        "name": "Request Malware Distribution Site Takedown",
+        "notes": "Identify and request takedown of the site/platform from which the developer downloaded the infostealer (compromised website, fake tool site, malicious ad landing page, poisoned search result). Report to Google Safe Browsing, Microsoft SmartScreen, and relevant platform.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1189", "techniqueName": "Drive-by Compromise", "tactic": "Initial Access", "url": "https://attack.mitre.org/techniques/T1189/"},
+          {"techniqueId": "T1608.004", "techniqueName": "Drive-by Target", "tactic": "Resource Development", "url": "https://attack.mitre.org/techniques/T1608/004/"}
+        ],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-share-iocs": {
+        "id": "proc-share-iocs",
+        "name": "Share IOCs with Community & CERT",
+        "notes": "Share indicators with: (1) Industry ISAC, (2) National CERT (e.g., CERT-Bund/BSI), (3) Threat intelligence platforms (MISP, OTX), (4) Vendor threat feeds (EDR vendor, firewall vendor). Publish anonymized IOCs if appropriate.",
+        "objectives": ["PREVENTION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst", "role-commander"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-takedown-requested"]
+      },
+      "proc-privilege-assessment": {
+        "id": "proc-privilege-assessment",
+        "name": "Privilege & Access Assessment",
+        "notes": "Comprehensively assess all privileges and access rights of the compromised developer account to determine blast radius and potential impact of stolen credentials.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst", "role-sysadmin", "role-devops"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1078", "techniqueName": "Valid Accounts", "tactic": "Privilege Escalation", "url": "https://attack.mitre.org/techniques/T1078/"},
+          {"techniqueId": "T1069", "techniqueName": "Permission Groups Discovery", "tactic": "Discovery", "url": "https://attack.mitre.org/techniques/T1069/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-DAM", "techniqueName": "Domain Account Monitoring", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:DomainAccountMonitoring"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-assess-ad-groups", "proc-assess-cloud-access", "proc-assess-code-access", "proc-assess-production-access"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-scope-determined"],
+        "resultArtifactInStateIds": ["asi-privilege-assessed"]
+      },
+      "proc-assess-ad-groups": {
+        "id": "proc-assess-ad-groups",
+        "name": "Assess AD Group Memberships",
+        "notes": "Enumerate all AD group memberships (direct and nested) of the affected account. Identify: admin groups, privileged groups (Server Operators, Backup Operators), application-specific groups granting elevated access. Determine if account had local admin on any servers.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-sysadmin"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1069.002", "techniqueName": "Domain Groups", "tactic": "Discovery", "url": "https://attack.mitre.org/techniques/T1069/002/"},
+          {"techniqueId": "T1078.002", "techniqueName": "Domain Accounts", "tactic": "Privilege Escalation", "url": "https://attack.mitre.org/techniques/T1078/002/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-DAM", "techniqueName": "Domain Account Monitoring", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:DomainAccountMonitoring"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-assess-cloud-access": {
+        "id": "proc-assess-cloud-access",
+        "name": "Assess Cloud & SaaS Access",
+        "notes": "Determine cloud access: (1) Azure/AWS/GCP IAM roles and permissions, (2) Azure AD/Entra ID roles, (3) Access to production vs. dev subscriptions, (4) Kubernetes cluster access (RBAC roles), (5) SaaS admin roles (GitHub org owner, Jira admin, etc.).",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-devops"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1078.004", "techniqueName": "Cloud Accounts", "tactic": "Privilege Escalation", "url": "https://attack.mitre.org/techniques/T1078/004/"}
+        ],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-assess-code-access": {
+        "id": "proc-assess-code-access",
+        "name": "Assess Source Code & CI/CD Access",
+        "notes": "Determine: (1) Which repositories the developer has write access to, (2) Branch protection bypass capabilities, (3) CI/CD pipeline admin access, (4) Access to deployment secrets/variables, (5) Package publishing rights (npm, PyPI, Docker Hub), (6) Code signing key access.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-devops"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1213.003", "techniqueName": "Code Repositories", "tactic": "Collection", "url": "https://attack.mitre.org/techniques/T1213/003/"},
+          {"techniqueId": "T1195.002", "techniqueName": "Compromise Software Supply Chain", "tactic": "Initial Access", "url": "https://attack.mitre.org/techniques/T1195/002/"}
+        ],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-assess-production-access": {
+        "id": "proc-assess-production-access",
+        "name": "Assess Production System Access",
+        "notes": "Determine direct production access: (1) SSH access to production servers, (2) Database admin access, (3) Kubernetes production namespace access, (4) Access to customer data stores, (5) Jump host / bastion host access. This determines if customer data may be at risk.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-sysadmin", "role-devops"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1078", "techniqueName": "Valid Accounts", "tactic": "Initial Access", "url": "https://attack.mitre.org/techniques/T1078/"}
+        ],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-privilege-assessed"]
+      },
+      "proc-eradicate": {
+        "id": "proc-eradicate",
+        "name": "Eradication",
+        "notes": "Fully eradicate malware from the environment, verify no supply chain compromise occurred, and confirm no attacker persistence remains.",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-forensics", "role-sysadmin", "role-devops"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1547", "techniqueName": "Boot or Logon Autostart Execution", "tactic": "Persistence", "url": "https://attack.mitre.org/techniques/T1547/"},
+          {"techniqueId": "T1053", "techniqueName": "Scheduled Task/Job", "tactic": "Persistence", "url": "https://attack.mitre.org/techniques/T1053/"}
+        ],
+        "mitreDefend": [
+          {"techniqueId": "D3-PSA", "techniqueName": "Process Spawn Analysis", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:ProcessSpawnAnalysis"},
+          {"techniqueId": "D3-FH", "techniqueName": "File Hashing", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:FileHashing"}
+        ],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-wipe-workstation", "proc-verify-repos", "proc-verify-cicd", "proc-verify-published-packages"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-contained", "asi-hunt-complete", "asi-privilege-assessed"],
+        "resultArtifactInStateIds": ["asi-eradicated"]
+      },
+      "proc-wipe-workstation": {
+        "id": "proc-wipe-workstation",
+        "name": "Wipe & Reimage Workstation",
+        "notes": "Full disk wipe and reimage of the affected developer workstation from a clean gold image. Do NOT attempt to clean in-place - the RAT may have additional persistence mechanisms not identified. Preserve forensic disk image before wiping.",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-infostealer-removed",
+        "associatedRoleIds": ["role-sysadmin"],
+        "activityImpacts": [
+          {"id": "ai-008", "paragonId": "pg-infostealer-removed", "newValue": 0.99},
+          {"id": "ai-009", "paragonId": "pg-rat-removed", "newValue": 0.99},
+          {"id": "ai-010", "paragonId": "pg-persistence-cleared", "newValue": 0.99}
+        ],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-verify-repos": {
+        "id": "proc-verify-repos",
+        "name": "Verify Source Code Repository Integrity",
+        "notes": "Audit all repositories the developer had write access to: (1) Review all commits since infection date for unauthorized changes (backdoors, dependency modifications, CI config changes), (2) Check for force-pushes that may have altered history, (3) Verify no malicious GitHub Actions/workflows were added, (4) Check for unauthorized branch protection rule changes.",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-code-repos-clean",
+        "associatedRoleIds": ["role-devops"],
+        "activityImpacts": [{"id": "ai-011", "paragonId": "pg-code-repos-clean", "newValue": 0.9}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1195.002", "techniqueName": "Compromise Software Supply Chain", "tactic": "Initial Access", "url": "https://attack.mitre.org/techniques/T1195/002/"},
+          {"techniqueId": "T1213.003", "techniqueName": "Code Repositories", "tactic": "Collection", "url": "https://attack.mitre.org/techniques/T1213/003/"}
+        ],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-verify-cicd": {
+        "id": "proc-verify-cicd",
+        "name": "Verify CI/CD Pipeline Integrity",
+        "notes": "Audit CI/CD pipelines: (1) Review pipeline definitions for unauthorized modifications, (2) Check build artifact integrity (compare hashes), (3) Verify no malicious steps were injected, (4) Check for unauthorized service connections or variable modifications, (5) Review deployment history for suspicious deployments during exposure window.",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-cicd-verified",
+        "associatedRoleIds": ["role-devops"],
+        "activityImpacts": [{"id": "ai-012", "paragonId": "pg-cicd-verified", "newValue": 0.88}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1195.002", "techniqueName": "Compromise Software Supply Chain", "tactic": "Initial Access", "url": "https://attack.mitre.org/techniques/T1195/002/"}],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-verify-published-packages": {
+        "id": "proc-verify-published-packages",
+        "name": "Verify Published Package Integrity",
+        "notes": "If developer had package publishing rights: (1) Check npm/PyPI/NuGet publish history for unauthorized versions, (2) Compare published artifacts against known-good source, (3) If compromise suspected, yank affected versions and publish security advisory.",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-devops"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1195.002", "techniqueName": "Compromise Software Supply Chain", "tactic": "Initial Access", "url": "https://attack.mitre.org/techniques/T1195/002/"}],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-eradicated"]
+      },
+      "proc-recover": {
+        "id": "proc-recover",
+        "name": "Recovery & Rework",
+        "notes": "Rebuild developer environment with hardened security posture. Implement architectural improvements to prevent recurrence: application allowlisting, credential isolation, reduced developer privileges.",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-sysadmin", "role-devops", "role-commander"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [
+          {"techniqueId": "D3-EAL", "techniqueName": "Executable Allowlisting", "tactic": "Harden", "url": "https://d3fend.mitre.org/technique/d3f:ExecutableAllowlisting"},
+          {"techniqueId": "D3-CH", "techniqueName": "Credential Hardening", "tactic": "Harden", "url": "https://d3fend.mitre.org/technique/d3f:CredentialHardening"}
+        ],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-rebuild-workstation", "proc-harden-dev-env", "proc-reduce-privileges", "proc-implement-credential-isolation"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-eradicated"],
+        "resultArtifactInStateIds": ["asi-recovered"]
+      },
+      "proc-rebuild-workstation": {
+        "id": "proc-rebuild-workstation",
+        "name": "Rebuild Developer Workstation",
+        "notes": "Provision clean workstation with: hardened SOE, updated EDR with strict policy, application allowlisting for unsigned executables, browser with no password save (use enterprise password manager), credential guard enabled.",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-sysadmin"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [{"techniqueId": "D3-EAL", "techniqueName": "Executable Allowlisting", "tactic": "Harden", "url": "https://d3fend.mitre.org/technique/d3f:ExecutableAllowlisting"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-harden-dev-env": {
+        "id": "proc-harden-dev-env",
+        "name": "Harden Developer Environment",
+        "notes": "Implement: (1) Container-based or VM-based development environments for untrusted code, (2) Disable browser password saving org-wide (enforce password manager), (3) Short-lived credentials via credential broker, (4) Hardware security keys for MFA, (5) Restrict admin rights on developer workstations.",
+        "objectives": ["PREVENTION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-devops", "role-sysadmin"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [
+          {"techniqueId": "D3-CH", "techniqueName": "Credential Hardening", "tactic": "Harden", "url": "https://d3fend.mitre.org/technique/d3f:CredentialHardening"},
+          {"techniqueId": "D3-EAL", "techniqueName": "Executable Allowlisting", "tactic": "Harden", "url": "https://d3fend.mitre.org/technique/d3f:ExecutableAllowlisting"}
+        ],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-reduce-privileges": {
+        "id": "proc-reduce-privileges",
+        "name": "Implement Least Privilege",
+        "notes": "Review and reduce developer account privileges: (1) Remove unnecessary AD group memberships, (2) Implement JIT (Just-In-Time) access for production, (3) Separate development and production credentials, (4) Remove direct production database access, (5) Implement break-glass procedures instead of standing access.",
+        "objectives": ["PREVENTION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-sysadmin", "role-devops"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [{"techniqueId": "D3-CH", "techniqueName": "Credential Hardening", "tactic": "Harden", "url": "https://d3fend.mitre.org/technique/d3f:CredentialHardening"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-implement-credential-isolation": {
+        "id": "proc-implement-credential-isolation",
+        "name": "Implement Credential Isolation",
+        "notes": "Deploy: (1) Windows Credential Guard to prevent LSASS credential theft, (2) Remote Credential Guard for RDP (prevents credential caching on remote hosts), (3) Short-lived SSH certificates instead of static keys, (4) Ephemeral cloud credentials via federation (no long-lived access keys), (5) Workload identity for CI/CD (no static service account credentials).",
+        "objectives": ["PREVENTION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-sysadmin", "role-devops"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [
+          {"techniqueId": "D3-CRO", "techniqueName": "Credential Rotation", "tactic": "Harden", "url": "https://d3fend.mitre.org/technique/d3f:CredentialRotation"},
+          {"techniqueId": "D3-CH", "techniqueName": "Credential Hardening", "tactic": "Harden", "url": "https://d3fend.mitre.org/technique/d3f:CredentialHardening"}
+        ],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-recovered"]
+      },
+      "proc-lessons": {
+        "id": "proc-lessons",
+        "name": "Lessons Learned",
+        "notes": "Post-incident review: assess infection vector (social engineering, search poisoning, fake tool), evaluate EDR detection gaps, review developer privilege model, assess credential storage practices, evaluate supply chain security controls, determine if security awareness training updates needed.",
+        "objectives": ["PREVENTION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-commander"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-recovered", "asi-takedown-requested"],
+        "resultArtifactInStateIds": []
+      }
+    },
+    "artifacts": {
+      "art-alert": {
+        "id": "art-alert",
+        "name": "Initial Detection Alert",
+        "stateIds": ["as-alert-triggered"]
+      },
+      "art-scope": {
+        "id": "art-scope",
+        "name": "Incident Scope Report",
+        "stateIds": ["as-scope-draft", "as-scope-final"]
+      },
+      "art-containment": {
+        "id": "art-containment",
+        "name": "Containment Status",
+        "stateIds": ["as-containment-active"]
+      },
+      "art-hunt": {
+        "id": "art-hunt",
+        "name": "Threat Hunt Report",
+        "stateIds": ["as-hunt-complete"]
+      },
+      "art-takedown": {
+        "id": "art-takedown",
+        "name": "Takedown Request Status",
+        "stateIds": ["as-takedown-submitted"]
+      },
+      "art-privilege": {
+        "id": "art-privilege",
+        "name": "Privilege Assessment Report",
+        "stateIds": ["as-privilege-assessed"]
+      },
+      "art-eradication": {
+        "id": "art-eradication",
+        "name": "Eradication Report",
+        "stateIds": ["as-eradication-done"]
+      },
+      "art-recovery": {
+        "id": "art-recovery",
+        "name": "Recovery Status",
+        "stateIds": ["as-recovery-complete"]
+      }
+    },
+    "artifactStates": {
+      "as-alert-triggered": {
+        "id": "as-alert-triggered",
+        "name": "triggered",
+        "artifactName": "Initial Detection Alert",
+        "achievedStatus": false,
+        "instanceIds": ["asi-alert-generated"]
+      },
+      "as-scope-draft": {
+        "id": "as-scope-draft",
+        "name": "draft",
+        "artifactName": "Incident Scope Report",
+        "achievedStatus": false,
+        "instanceIds": []
+      },
+      "as-scope-final": {
+        "id": "as-scope-final",
+        "name": "finalized",
+        "artifactName": "Incident Scope Report",
+        "achievedStatus": false,
+        "instanceIds": ["asi-scope-determined"]
+      },
+      "as-containment-active": {
+        "id": "as-containment-active",
+        "name": "active",
+        "artifactName": "Containment Status",
+        "achievedStatus": false,
+        "instanceIds": ["asi-contained"]
+      },
+      "as-hunt-complete": {
+        "id": "as-hunt-complete",
+        "name": "complete",
+        "artifactName": "Threat Hunt Report",
+        "achievedStatus": false,
+        "instanceIds": ["asi-hunt-complete"]
+      },
+      "as-takedown-submitted": {
+        "id": "as-takedown-submitted",
+        "name": "submitted",
+        "artifactName": "Takedown Request Status",
+        "achievedStatus": false,
+        "instanceIds": ["asi-takedown-requested"]
+      },
+      "as-privilege-assessed": {
+        "id": "as-privilege-assessed",
+        "name": "assessed",
+        "artifactName": "Privilege Assessment Report",
+        "achievedStatus": false,
+        "instanceIds": ["asi-privilege-assessed"]
+      },
+      "as-eradication-done": {
+        "id": "as-eradication-done",
+        "name": "completed",
+        "artifactName": "Eradication Report",
+        "achievedStatus": false,
+        "instanceIds": ["asi-eradicated"]
+      },
+      "as-recovery-complete": {
+        "id": "as-recovery-complete",
+        "name": "complete",
+        "artifactName": "Recovery Status",
+        "achievedStatus": false,
+        "instanceIds": ["asi-recovered"]
+      }
+    },
+    "artifactStateInstances": {
+      "asi-alert-generated": {
+        "id": "asi-alert-generated",
+        "originatingActivity": "proc-detect-edr",
+        "usedByActivity": "proc-analysis"
+      },
+      "asi-scope-determined": {
+        "id": "asi-scope-determined",
+        "originatingActivity": "proc-map-c2",
+        "usedByActivity": "proc-hunt"
+      },
+      "asi-contained": {
+        "id": "asi-contained",
+        "originatingActivity": "proc-revoke-tokens",
+        "usedByActivity": "proc-eradicate"
+      },
+      "asi-hunt-complete": {
+        "id": "asi-hunt-complete",
+        "originatingActivity": "proc-hunt-other-endpoints",
+        "usedByActivity": "proc-eradicate"
+      },
+      "asi-takedown-requested": {
+        "id": "asi-takedown-requested",
+        "originatingActivity": "proc-share-iocs",
+        "usedByActivity": "proc-lessons"
+      },
+      "asi-privilege-assessed": {
+        "id": "asi-privilege-assessed",
+        "originatingActivity": "proc-assess-production-access",
+        "usedByActivity": "proc-eradicate"
+      },
+      "asi-eradicated": {
+        "id": "asi-eradicated",
+        "originatingActivity": "proc-verify-published-packages",
+        "usedByActivity": "proc-recover"
+      },
+      "asi-recovered": {
+        "id": "asi-recovered",
+        "originatingActivity": "proc-implement-credential-isolation",
+        "usedByActivity": "proc-lessons"
+      }
+    },
+    "actuators": {
+      "act-edr": {
+        "id": "act-edr",
+        "name": "EDR Platform",
+        "actuatorType": "MACHINE"
+      },
+      "act-firewall": {
+        "id": "act-firewall",
+        "name": "Network Firewall / Web Proxy",
+        "actuatorType": "MACHINE"
+      },
+      "act-siem": {
+        "id": "act-siem",
+        "name": "SIEM Platform",
+        "actuatorType": "MACHINE"
+      },
+      "act-dns": {
+        "id": "act-dns",
+        "name": "DNS Security (Sinkhole/Filtering)",
+        "actuatorType": "MACHINE"
+      },
+      "act-idp": {
+        "id": "act-idp",
+        "name": "Identity Provider (AD/Entra)",
+        "actuatorType": "MACHINE"
+      }
+    },
+    "externalReferences": {
+      "ref-001": {
+        "id": "ref-001",
+        "name": "NIST SP 800-61r2 Incident Handling Guide",
+        "referenceType": "BEST_PRACTICE"
+      },
+      "ref-002": {
+        "id": "ref-002",
+        "name": "MITRE ATT&CK - Steal or Forge Authentication Certificates",
+        "referenceType": "BEST_PRACTICE"
+      },
+      "ref-003": {
+        "id": "ref-003",
+        "name": "CISA - Protecting Against Infostealers",
+        "referenceType": "BEST_PRACTICE"
+      }
+    },
+    "roles": {
+      "role-analyst": {"id": "role-analyst", "name": "SOC Analyst / Threat Hunter"},
+      "role-commander": {"id": "role-commander", "name": "Incident Commander"},
+      "role-forensics": {"id": "role-forensics", "name": "Forensics / Malware Analyst"},
+      "role-sysadmin": {"id": "role-sysadmin", "name": "System Administrator"},
+      "role-devops": {"id": "role-devops", "name": "DevOps / Platform Engineer"},
+      "role-network-admin": {"id": "role-network-admin", "name": "Network Administrator"}
+    },
+    "symbiosis": {
+      "businessObjectives": {
+        "bo-001": {
+          "id": "bo-001",
+          "scope": "All credentials and sessions accessible from developer workstations",
+          "purpose": "Ensure stolen credentials cannot be used for unauthorized access",
+          "viewpoint": "Identity & Access Management",
+          "context": "Infostealers harvest ALL accessible credentials making the blast radius proportional to developer privilege level",
+          "relatedObjectiveIds": ["bo-002", "bo-003"],
+          "paragonId": null
+        },
+        "bo-002": {
+          "id": "bo-002",
+          "scope": "Source code, CI/CD pipelines, and published software packages",
+          "purpose": "Verify and maintain integrity of the software supply chain",
+          "viewpoint": "Software Supply Chain Security",
+          "context": "Compromised developer credentials can lead to supply chain attacks affecting downstream customers",
+          "relatedObjectiveIds": ["bo-001"],
+          "paragonId": null
+        },
+        "bo-003": {
+          "id": "bo-003",
+          "scope": "Attacker C2 infrastructure and malware distribution sites",
+          "purpose": "Disrupt attacker operations and protect other potential victims",
+          "viewpoint": "Threat Neutralization",
+          "context": "Takedown of C2 and distribution infrastructure limits attacker capability and reduces community risk",
+          "relatedObjectiveIds": ["bo-001"],
+          "paragonId": null
+        }
+      },
+      "securityMeasurementGoals": {
+        "smg-001": {
+          "id": "smg-001",
+          "viewpoint": "Security Operations",
+          "context": "Speed of containment directly correlates with blast radius limitation",
+          "scope": "All compromised credentials and active sessions",
+          "purpose": "Measure time from detection to complete credential invalidation",
+          "focus": "Mean time to contain (MTTC) for credential-based compromises",
+          "criteria": "All credentials rotated and sessions terminated within 2 hours of detection",
+          "businessObjectiveIds": ["bo-001"],
+          "paragonId": null
+        },
+        "smg-002": {
+          "id": "smg-002",
+          "viewpoint": "Supply Chain Security",
+          "context": "Unauthorized code changes can propagate to customers before detection",
+          "scope": "All repositories and packages accessible by compromised account",
+          "purpose": "Verify no supply chain compromise occurred during exposure window",
+          "focus": "Completeness and speed of supply chain integrity verification",
+          "criteria": "All accessible repos and packages audited within 24 hours; no unauthorized changes confirmed",
+          "businessObjectiveIds": ["bo-002"],
+          "paragonId": null
+        }
+      },
+      "securityMetrics": {
+        "sm-001": {
+          "id": "sm-001",
+          "description": "Time from initial EDR alert to complete credential rotation and session termination",
+          "goal": "Minimize the window during which stolen credentials remain valid",
+          "baseMeasurementIds": ["bm-001"],
+          "method": "Track time from first alert to last credential rotated and last session killed",
+          "measurementFunction": "max(last_credential_rotated, last_session_killed) - first_alert_time",
+          "interpretation": "Under 2 hours excellent; 2-6 hours acceptable; over 6 hours indicates containment procedure failure",
+          "reporting": "Post-incident timeline; security operations KPI dashboard",
+          "smgIds": ["smg-001"]
+        },
+        "sm-002": {
+          "id": "sm-002",
+          "description": "Percentage of accessible repositories and packages verified clean within 24 hours",
+          "goal": "Ensure no supply chain compromise went undetected",
+          "baseMeasurementIds": ["bm-002", "bm-003"],
+          "method": "Track audit completion of all repos/packages the compromised account had write access to",
+          "measurementFunction": "(bm-002 / bm-003) * 100",
+          "interpretation": "100% is required; anything less indicates residual supply chain risk",
+          "reporting": "Eradication phase status updates; post-incident report",
+          "smgIds": ["smg-002"]
+        }
+      },
+      "baseMeasurements": {
+        "bm-001": {
+          "id": "bm-001",
+          "description": "Elapsed minutes from first detection alert to completion of all credential rotations and session terminations"
+        },
+        "bm-002": {
+          "id": "bm-002",
+          "description": "Count of repositories and packages verified clean within 24 hours"
+        },
+        "bm-003": {
+          "id": "bm-003",
+          "description": "Total count of repositories and packages the compromised account had write access to"
+        }
+      },
+      "dependencyModelParagonIds": ["pg-root"]
+    }
+  },
+  "representation": {"dmViews": {}, "pbViews": {}}
+}

@@ -38,5 +38,20 @@
     "filename": "data-exfiltration-t1041.json",
     "name": "Data Exfiltration Response (T1041)",
     "description": "Data theft response covering C2 exfiltration, staging, and archive collection. ATT&CK: T1041, T1560, T1048. D3FEND: Network Traffic Analysis, Data Loss Prevention, Outbound Traffic Filtering."
+  },
+  {
+    "filename": "ad-compromise-t1003.json",
+    "name": "Active Directory On-Premise Compromise (T1003)",
+    "description": "AD forest compromise response covering DCSync, Kerberoasting, Golden Ticket persistence, ransomware staging via GPO, DC containment for recovery, and full forest rebuild. ATT&CK: T1003, T1558, T1550, T1484, T1486, T1490. D3FEND: Network Isolation, Credential Rotation, Active Directory Analysis, RPC Traffic Analysis."
+  },
+  {
+    "filename": "credential-leakage-github-t1552.json",
+    "name": "Credential Leakage via Public GitHub Repository (T1552.004)",
+    "description": "Response for credentials leaked to public GitHub including immediate rotation, RDP cached credential elimination, session termination, gMSA migration for service accounts, and German regulatory notifications (LDI/GDPR Art.33, BSI, LKA/BKA). ATT&CK: T1552, T1078, T1213, T1021. D3FEND: Credential Rotation, Credential Hardening, Account Locking, Secret Pattern Extraction."
+  },
+  {
+    "filename": "infostealer-rat-t1555.json",
+    "name": "Infostealer with RAT Deployment on Developer Workstation (T1555)",
+    "description": "Developer workstation compromised by infostealer with second-stage RAT and C2 beaconing. Covers TTP hunting, C2/malware distribution takedown requests, full credential rotation, privilege assessment, supply chain integrity verification, and environment hardening. ATT&CK: T1555, T1219, T1071, T1204, T1539, T1528, T1195, T1547. D3FEND: Network Isolation, Credential Rotation, DNS Denylisting, Process Spawn Analysis, Executable Allowlisting."
   }
 ]

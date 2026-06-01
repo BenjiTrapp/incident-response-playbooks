@@ -1,0 +1,1100 @@
+{
+  "name": "Active Directory On-Premise Compromise (T1003)",
+  "version": "1.0",
+  "snapshots": [],
+  "baseline": null,
+  "createdAt": "2025-06-01T00:00:00.000Z",
+  "model": {
+    "dependencyModels": {
+      "dm-001": {
+        "id": "dm-001",
+        "name": "AD Infrastructure Integrity & Business Continuity",
+        "rootId": "pg-root",
+        "paragons": {
+          "pg-root": {
+            "id": "pg-root",
+            "description": "AD Infrastructure Integrity & Business Continuity",
+            "type": "AND",
+            "leafProbability": 1.0,
+            "childIds": ["pg-ad-integrity", "pg-credential-security", "pg-lateral-movement-contained", "pg-ransomware-prevented"],
+            "criticalThreshold": 0.5,
+            "notifyMode": "REQUEST_APPROVAL",
+            "stakeholders": [{"name": "CISO", "contact": "ciso@example.com", "roleId": null}, {"name": "AD Operations Lead", "contact": "ad-ops@example.com", "roleId": null}]
+          },
+          "pg-ad-integrity": {
+            "id": "pg-ad-integrity",
+            "description": "Active Directory Integrity Assured",
+            "type": "AND",
+            "leafProbability": 1.0,
+            "childIds": ["pg-dc-clean", "pg-gpo-integrity", "pg-krbtgt-secure"],
+            "criticalThreshold": 0.6,
+            "notifyMode": "REQUEST_APPROVAL",
+            "stakeholders": []
+          },
+          "pg-credential-security": {
+            "id": "pg-credential-security",
+            "description": "Credential Material Secured",
+            "type": "AND",
+            "leafProbability": 1.0,
+            "childIds": ["pg-password-reset", "pg-kerberos-tickets-invalidated"],
+            "criticalThreshold": 0.7,
+            "notifyMode": "REQUEST_APPROVAL",
+            "stakeholders": []
+          },
+          "pg-lateral-movement-contained": {
+            "id": "pg-lateral-movement-contained",
+            "description": "Lateral Movement Contained",
+            "type": "AND",
+            "leafProbability": 1.0,
+            "childIds": ["pg-network-segmented", "pg-smb-restricted"],
+            "criticalThreshold": 0.6,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-ransomware-prevented": {
+            "id": "pg-ransomware-prevented",
+            "description": "Ransomware Deployment Prevented",
+            "type": "AND",
+            "leafProbability": 1.0,
+            "childIds": ["pg-gpo-ransomware-blocked", "pg-psexec-blocked"],
+            "criticalThreshold": 0.8,
+            "notifyMode": "REQUEST_APPROVAL",
+            "stakeholders": []
+          },
+          "pg-dc-clean": {
+            "id": "pg-dc-clean",
+            "description": "Domain Controllers verified clean",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.3,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-gpo-integrity": {
+            "id": "pg-gpo-integrity",
+            "description": "Group Policy Objects integrity verified",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.5,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-krbtgt-secure": {
+            "id": "pg-krbtgt-secure",
+            "description": "KRBTGT account reset and secured",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.4,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-password-reset": {
+            "id": "pg-password-reset",
+            "description": "All compromised passwords rotated",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.35,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-kerberos-tickets-invalidated": {
+            "id": "pg-kerberos-tickets-invalidated",
+            "description": "All Kerberos tickets invalidated",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.5,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-network-segmented": {
+            "id": "pg-network-segmented",
+            "description": "Network segmentation enforced",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.5,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-smb-restricted": {
+            "id": "pg-smb-restricted",
+            "description": "SMB/RPC lateral movement restricted",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.45,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-gpo-ransomware-blocked": {
+            "id": "pg-gpo-ransomware-blocked",
+            "description": "GPO-based ransomware deployment blocked",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.4,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-psexec-blocked": {
+            "id": "pg-psexec-blocked",
+            "description": "PsExec/WMIC remote execution blocked",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.45,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          }
+        }
+      }
+    },
+    "organisations": {
+      "org-001": {
+        "id": "org-001",
+        "name": "Incident Response Team",
+        "roleIds": ["role-analyst", "role-commander", "role-forensics", "role-ad-admin", "role-network-admin"],
+        "rootProcessIds": ["proc-root"]
+      }
+    },
+    "processes": {
+      "proc-root": {
+        "id": "proc-root",
+        "name": "Active Directory Compromise Response",
+        "notes": "End-to-end response for AD on-premise compromise including credential theft, lateral movement, ransomware staging, containment with preserved DC for recovery, and full AD forest recovery.",
+        "objectives": [],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-commander"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": ["ref-001", "ref-002", "ref-003"],
+        "mitreTechniques": [
+          {"techniqueId": "T1003.001", "techniqueName": "LSASS Memory", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1003/001/"},
+          {"techniqueId": "T1558.001", "techniqueName": "Golden Ticket", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1558/001/"}
+        ],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-detect", "proc-analysis", "proc-contain", "proc-ransomware-check", "proc-eradicate", "proc-recover", "proc-lessons"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-detect": {
+        "id": "proc-detect",
+        "name": "Detection",
+        "notes": "Identify AD compromise indicators: anomalous LDAP queries, DCSync traffic, unusual service account behavior, Kerberoasting attempts.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "AUTOMATIC",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1003.006", "techniqueName": "DCSync", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1003/006/"},
+          {"techniqueId": "T1558.003", "techniqueName": "Kerberoasting", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1558/003/"}
+        ],
+        "mitreDefend": [
+          {"techniqueId": "D3-OSM", "techniqueName": "Operating System Monitoring", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:OperatingSystemMonitoring"},
+          {"techniqueId": "D3-NTCD", "techniqueName": "Network Traffic Community Deviation", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:NetworkTrafficCommunityDeviation"}
+        ],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-detect-dcsync", "proc-detect-kerberoast", "proc-detect-anomalous-logon"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-alert-generated"]
+      },
+      "proc-detect-dcsync": {
+        "id": "proc-detect-dcsync",
+        "name": "Detect DCSync Activity",
+        "notes": "Monitor for DRS replication requests from non-DC sources (Event ID 4662 with GUID for DS-Replication-Get-Changes-All).",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "AUTOMATIC",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1003.006", "techniqueName": "DCSync", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1003/006/"}],
+        "mitreDefend": [{"techniqueId": "D3-RPCA", "techniqueName": "RPC Traffic Analysis", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:RPCTrafficAnalysis"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-alert-generated"]
+      },
+      "proc-detect-kerberoast": {
+        "id": "proc-detect-kerberoast",
+        "name": "Detect Kerberoasting",
+        "notes": "Identify mass TGS requests for service accounts with weak encryption (RC4) from single source hosts.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "AUTOMATIC",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1558.003", "techniqueName": "Kerberoasting", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1558/003/"}],
+        "mitreDefend": [{"techniqueId": "D3-ANET", "techniqueName": "Authentication Event Thresholding", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:AuthenticationEventThresholding"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-detect-anomalous-logon": {
+        "id": "proc-detect-anomalous-logon",
+        "name": "Detect Anomalous Privileged Logons",
+        "notes": "Alert on domain admin logons to non-Tier-0 systems, pass-the-hash indicators, and NTLM downgrade attacks.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "AUTOMATIC",
+        "paragonId": null,
+        "associatedRoleIds": ["role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1550.002", "techniqueName": "Pass the Hash", "tactic": "Lateral Movement", "url": "https://attack.mitre.org/techniques/T1550/002/"},
+          {"techniqueId": "T1078.002", "techniqueName": "Domain Accounts", "tactic": "Privilege Escalation", "url": "https://attack.mitre.org/techniques/T1078/002/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-UGLPA", "techniqueName": "User Geolocation Logon Pattern Analysis", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:UserGeolocationLogonPatternAnalysis"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-analysis": {
+        "id": "proc-analysis",
+        "name": "Analysis & Scoping",
+        "notes": "Determine extent of AD compromise: enumerate compromised accounts, identify persistence mechanisms (Golden/Silver tickets, AdminSDHolder, DCShadow), map lateral movement paths.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-forensics", "role-ad-admin"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1087.002", "techniqueName": "Domain Account Discovery", "tactic": "Discovery", "url": "https://attack.mitre.org/techniques/T1087/002/"},
+          {"techniqueId": "T1482", "techniqueName": "Domain Trust Discovery", "tactic": "Discovery", "url": "https://attack.mitre.org/techniques/T1482/"},
+          {"techniqueId": "T1558.001", "techniqueName": "Golden Ticket", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1558/001/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-DAM", "techniqueName": "Domain Account Monitoring", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:DomainAccountMonitoring"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-enum-compromised", "proc-persistence-analysis", "proc-lateral-path"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-alert-generated"],
+        "resultArtifactInStateIds": ["asi-scope-determined"]
+      },
+      "proc-enum-compromised": {
+        "id": "proc-enum-compromised",
+        "name": "Enumerate Compromised Accounts",
+        "notes": "Use AD logs and forensic analysis to identify all compromised user, service, and computer accounts. Check for LSASS dumps, Mimikatz artifacts, SAM database extraction.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-forensics"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1003.001", "techniqueName": "LSASS Memory", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1003/001/"},
+          {"techniqueId": "T1003.002", "techniqueName": "Security Account Manager", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1003/002/"},
+          {"techniqueId": "T1003.003", "techniqueName": "NTDS", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1003/003/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-CCSA", "techniqueName": "Credential Compromise Scope Analysis", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:CredentialCompromiseScopeAnalysis"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-persistence-analysis": {
+        "id": "proc-persistence-analysis",
+        "name": "Identify AD Persistence Mechanisms",
+        "notes": "Check for Golden Ticket/Silver Ticket creation, AdminSDHolder modifications, DCShadow indicators, SID History injection, GPO-based persistence, and skeleton key deployment.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-forensics", "role-ad-admin"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1558.001", "techniqueName": "Golden Ticket", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1558/001/"},
+          {"techniqueId": "T1134.005", "techniqueName": "SID-History Injection", "tactic": "Privilege Escalation", "url": "https://attack.mitre.org/techniques/T1134/005/"},
+          {"techniqueId": "T1484.001", "techniqueName": "Group Policy Modification", "tactic": "Defense Evasion", "url": "https://attack.mitre.org/techniques/T1484/001/"}
+        ],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-lateral-path": {
+        "id": "proc-lateral-path",
+        "name": "Map Lateral Movement Paths",
+        "notes": "Use BloodHound data or equivalent to identify attack paths exploited. Determine which systems attacker accessed via RDP, WinRM, SMB, PsExec.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-forensics"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1021.001", "techniqueName": "Remote Desktop Protocol", "tactic": "Lateral Movement", "url": "https://attack.mitre.org/techniques/T1021/001/"},
+          {"techniqueId": "T1021.002", "techniqueName": "SMB/Windows Admin Shares", "tactic": "Lateral Movement", "url": "https://attack.mitre.org/techniques/T1021/002/"},
+          {"techniqueId": "T1021.006", "techniqueName": "Windows Remote Management", "tactic": "Lateral Movement", "url": "https://attack.mitre.org/techniques/T1021/006/"},
+          {"techniqueId": "T1570", "techniqueName": "Lateral Tool Transfer", "tactic": "Lateral Movement", "url": "https://attack.mitre.org/techniques/T1570/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-NTCD", "techniqueName": "Network Traffic Community Deviation", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:NetworkTrafficCommunityDeviation"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-scope-determined"]
+      },
+      "proc-contain": {
+        "id": "proc-contain",
+        "name": "Containment",
+        "notes": "Contain the incident by isolating compromised systems while preserving one clean DC for recovery. Block lateral movement, disable compromised accounts, restrict SMB/RPC. Contain one DC by network isolation to use as recovery source.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-commander", "role-ad-admin", "role-network-admin"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [
+          {"techniqueId": "D3-NI", "techniqueName": "Network Isolation", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:NetworkIsolation"},
+          {"techniqueId": "D3-AL", "techniqueName": "Account Locking", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:AccountLocking"}
+        ],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-isolate-dc-recovery", "proc-disable-accounts", "proc-block-lateral", "proc-disable-trusts"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-scope-determined"],
+        "resultArtifactInStateIds": ["asi-contained"]
+      },
+      "proc-isolate-dc-recovery": {
+        "id": "proc-isolate-dc-recovery",
+        "name": "Isolate Clean DC for Recovery",
+        "notes": "Identify the least-compromised DC, network-isolate it completely (no inbound/outbound except management VLAN). This preserved DC will serve as the recovery seed for the AD forest. Verify its NTDS.dit integrity before relying on it.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-dc-clean",
+        "associatedRoleIds": ["role-ad-admin", "role-network-admin"],
+        "activityImpacts": [{"id": "ai-001", "paragonId": "pg-dc-clean", "newValue": 0.7}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [{"techniqueId": "D3-NI", "techniqueName": "Network Isolation", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:NetworkIsolation"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-contained"]
+      },
+      "proc-disable-accounts": {
+        "id": "proc-disable-accounts",
+        "name": "Disable Compromised Accounts",
+        "notes": "Disable all identified compromised accounts including domain admins, service accounts, and computer accounts. Reset passwords for tier-0 accounts immediately.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-password-reset",
+        "associatedRoleIds": ["role-ad-admin"],
+        "activityImpacts": [{"id": "ai-002", "paragonId": "pg-password-reset", "newValue": 0.6}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1078.002", "techniqueName": "Domain Accounts", "tactic": "Persistence", "url": "https://attack.mitre.org/techniques/T1078/002/"}],
+        "mitreDefend": [{"techniqueId": "D3-AL", "techniqueName": "Account Locking", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:AccountLocking"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-block-lateral": {
+        "id": "proc-block-lateral",
+        "name": "Block Lateral Movement",
+        "notes": "Apply emergency firewall rules blocking SMB (445), RPC (135), WinRM (5985/5986), RDP (3389) between workstation segments. Allow only DC-to-DC replication on isolated recovery DC.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-network-segmented",
+        "associatedRoleIds": ["role-network-admin"],
+        "activityImpacts": [
+          {"id": "ai-003", "paragonId": "pg-network-segmented", "newValue": 0.9},
+          {"id": "ai-004", "paragonId": "pg-smb-restricted", "newValue": 0.85}
+        ],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1021.002", "techniqueName": "SMB/Windows Admin Shares", "tactic": "Lateral Movement", "url": "https://attack.mitre.org/techniques/T1021/002/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-NI", "techniqueName": "Network Isolation", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:NetworkIsolation"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-disable-trusts": {
+        "id": "proc-disable-trusts",
+        "name": "Disable Forest/Domain Trusts",
+        "notes": "Temporarily disable all inter-forest and external domain trusts to prevent trust-based lateral movement and credential pivoting.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-ad-admin"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1482", "techniqueName": "Domain Trust Discovery", "tactic": "Discovery", "url": "https://attack.mitre.org/techniques/T1482/"}],
+        "mitreDefend": [{"techniqueId": "D3-NI", "techniqueName": "Network Isolation", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:NetworkIsolation"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-ransomware-check": {
+        "id": "proc-ransomware-check",
+        "name": "Ransomware Activity Assessment",
+        "notes": "Assess whether AD compromise has been used to stage or deploy ransomware via GPO, PsExec, or scheduled tasks. Check for encryption staging, shadow copy deletion, and ransomware payload distribution.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-forensics", "role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1486", "techniqueName": "Data Encrypted for Impact", "tactic": "Impact", "url": "https://attack.mitre.org/techniques/T1486/"},
+          {"techniqueId": "T1490", "techniqueName": "Inhibit System Recovery", "tactic": "Impact", "url": "https://attack.mitre.org/techniques/T1490/"},
+          {"techniqueId": "T1484.001", "techniqueName": "Group Policy Modification", "tactic": "Defense Evasion", "url": "https://attack.mitre.org/techniques/T1484/001/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-FIM", "techniqueName": "File Integrity Monitoring", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:FileIntegrityMonitoring"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-check-gpo-ransomware", "proc-check-shadow-copies", "proc-check-staging"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-scope-determined"],
+        "resultArtifactInStateIds": ["asi-ransomware-assessment"]
+      },
+      "proc-check-gpo-ransomware": {
+        "id": "proc-check-gpo-ransomware",
+        "name": "Check GPO for Ransomware Deployment",
+        "notes": "Audit all GPOs for unauthorized startup scripts, scheduled tasks, or software installation policies that could deploy ransomware payloads domain-wide.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-gpo-ransomware-blocked",
+        "associatedRoleIds": ["role-ad-admin", "role-forensics"],
+        "activityImpacts": [{"id": "ai-005", "paragonId": "pg-gpo-ransomware-blocked", "newValue": 0.8}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1484.001", "techniqueName": "Group Policy Modification", "tactic": "Defense Evasion", "url": "https://attack.mitre.org/techniques/T1484/001/"}],
+        "mitreDefend": [{"techniqueId": "D3-OSM", "techniqueName": "Operating System Monitoring", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:OperatingSystemMonitoring"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-check-shadow-copies": {
+        "id": "proc-check-shadow-copies",
+        "name": "Check for Shadow Copy Deletion",
+        "notes": "Verify VSS shadow copies on servers and endpoints. Alert on vssadmin delete, wmic shadowcopy delete, or bcdedit recovery disable commands in event logs.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-forensics"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1490", "techniqueName": "Inhibit System Recovery", "tactic": "Impact", "url": "https://attack.mitre.org/techniques/T1490/"}],
+        "mitreDefend": [{"techniqueId": "D3-OSM", "techniqueName": "Operating System Monitoring", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:OperatingSystemMonitoring"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-check-staging": {
+        "id": "proc-check-staging",
+        "name": "Check for Ransomware Staging",
+        "notes": "Search SYSVOL, NETLOGON, and common admin shares for staged ransomware binaries. Check for PsExec/WMIC execution patterns distributing payloads.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-psexec-blocked",
+        "associatedRoleIds": ["role-forensics"],
+        "activityImpacts": [{"id": "ai-006", "paragonId": "pg-psexec-blocked", "newValue": 0.8}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1570", "techniqueName": "Lateral Tool Transfer", "tactic": "Lateral Movement", "url": "https://attack.mitre.org/techniques/T1570/"},
+          {"techniqueId": "T1486", "techniqueName": "Data Encrypted for Impact", "tactic": "Impact", "url": "https://attack.mitre.org/techniques/T1486/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-FIM", "techniqueName": "File Integrity Monitoring", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:FileIntegrityMonitoring"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-ransomware-assessment"]
+      },
+      "proc-eradicate": {
+        "id": "proc-eradicate",
+        "name": "Eradication",
+        "notes": "Remove all attacker persistence from AD: reset KRBTGT twice, remove unauthorized GPOs, clean AdminSDHolder, remove rogue SPNs, purge DCShadow artifacts.",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-ad-admin", "role-forensics"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1558.001", "techniqueName": "Golden Ticket", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1558/001/"},
+          {"techniqueId": "T1098", "techniqueName": "Account Manipulation", "tactic": "Persistence", "url": "https://attack.mitre.org/techniques/T1098/"}
+        ],
+        "mitreDefend": [
+          {"techniqueId": "D3-CRO", "techniqueName": "Credential Rotation", "tactic": "Harden", "url": "https://d3fend.mitre.org/technique/d3f:CredentialRotation"},
+          {"techniqueId": "D3-DAM", "techniqueName": "Domain Account Monitoring", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:DomainAccountMonitoring"}
+        ],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-krbtgt-reset", "proc-clean-gpos", "proc-remove-persistence", "proc-reset-all-passwords"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-contained", "asi-ransomware-assessment"],
+        "resultArtifactInStateIds": ["asi-eradication-complete"]
+      },
+      "proc-krbtgt-reset": {
+        "id": "proc-krbtgt-reset",
+        "name": "Reset KRBTGT Account (Double Reset)",
+        "notes": "Reset KRBTGT password twice with sufficient replication interval (10+ hours between resets) to invalidate all Golden Tickets. Coordinate timing to minimize authentication disruption.",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-krbtgt-secure",
+        "associatedRoleIds": ["role-ad-admin"],
+        "activityImpacts": [{"id": "ai-007", "paragonId": "pg-krbtgt-secure", "newValue": 0.95}, {"id": "ai-008", "paragonId": "pg-kerberos-tickets-invalidated", "newValue": 0.95}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1558.001", "techniqueName": "Golden Ticket", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1558/001/"}],
+        "mitreDefend": [{"techniqueId": "D3-CRO", "techniqueName": "Credential Rotation", "tactic": "Harden", "url": "https://d3fend.mitre.org/technique/d3f:CredentialRotation"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-clean-gpos": {
+        "id": "proc-clean-gpos",
+        "name": "Remove Malicious GPOs",
+        "notes": "Remove all unauthorized or modified GPOs. Restore GPOs from verified backup. Audit SYSVOL for unauthorized scripts or binaries.",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-gpo-integrity",
+        "associatedRoleIds": ["role-ad-admin"],
+        "activityImpacts": [{"id": "ai-009", "paragonId": "pg-gpo-integrity", "newValue": 0.92}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1484.001", "techniqueName": "Group Policy Modification", "tactic": "Defense Evasion", "url": "https://attack.mitre.org/techniques/T1484/001/"}],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-remove-persistence": {
+        "id": "proc-remove-persistence",
+        "name": "Remove AD Persistence Mechanisms",
+        "notes": "Clean AdminSDHolder ACL modifications, remove SID History injections, delete rogue computer/service accounts, remove unauthorized DACL/ACE entries on sensitive objects (Domain NC head, AdminSDHolder, Schema).",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-ad-admin", "role-forensics"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [
+          {"techniqueId": "T1098", "techniqueName": "Account Manipulation", "tactic": "Persistence", "url": "https://attack.mitre.org/techniques/T1098/"},
+          {"techniqueId": "T1134.005", "techniqueName": "SID-History Injection", "tactic": "Privilege Escalation", "url": "https://attack.mitre.org/techniques/T1134/005/"}
+        ],
+        "mitreDefend": [{"techniqueId": "D3-DAM", "techniqueName": "Domain Account Monitoring", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:DomainAccountMonitoring"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-reset-all-passwords": {
+        "id": "proc-reset-all-passwords",
+        "name": "Forest-Wide Password Reset",
+        "notes": "Reset passwords for ALL domain accounts in phased approach: Tier-0 (DAs, EAs, Schema Admins) first, then service accounts, then standard users. Reset all computer account passwords via scheduled netdom resetpwd.",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-password-reset",
+        "associatedRoleIds": ["role-ad-admin"],
+        "activityImpacts": [{"id": "ai-010", "paragonId": "pg-password-reset", "newValue": 0.95}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1003", "techniqueName": "OS Credential Dumping", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1003/"}],
+        "mitreDefend": [{"techniqueId": "D3-CRO", "techniqueName": "Credential Rotation", "tactic": "Harden", "url": "https://d3fend.mitre.org/technique/d3f:CredentialRotation"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-eradication-complete"]
+      },
+      "proc-recover": {
+        "id": "proc-recover",
+        "name": "Recovery",
+        "notes": "Rebuild AD forest from contained clean DC. Restore DCs from verified backups or rebuild from scratch using contained DC as authoritative source. Re-establish replication, re-enable trusts, validate authentication services.",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-ad-admin", "role-commander"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": ["ref-003"],
+        "mitreTechniques": [],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-rebuild-dcs", "proc-validate-replication", "proc-restore-services"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-eradication-complete"],
+        "resultArtifactInStateIds": ["asi-ad-recovered"]
+      },
+      "proc-rebuild-dcs": {
+        "id": "proc-rebuild-dcs",
+        "name": "Rebuild Domain Controllers",
+        "notes": "Using the isolated clean DC as seed, rebuild additional DCs from clean OS media. Promote them using IFM from verified NTDS.dit or allow standard replication from the recovered DC. Do NOT restore DCs from pre-incident backups if KRBTGT compromise is confirmed.",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-dc-clean",
+        "associatedRoleIds": ["role-ad-admin"],
+        "activityImpacts": [{"id": "ai-011", "paragonId": "pg-dc-clean", "newValue": 0.95}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-validate-replication": {
+        "id": "proc-validate-replication",
+        "name": "Validate AD Replication",
+        "notes": "Run repadmin /replsummary, dcdiag /v, and verify all naming contexts replicate cleanly. Confirm SYSVOL replication via DFS-R is healthy.",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-ad-admin"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-restore-services": {
+        "id": "proc-restore-services",
+        "name": "Restore Dependent Services",
+        "notes": "Progressively restore services dependent on AD: DNS, DHCP, Certificate Services, Exchange/M365 hybrid, application SSO. Validate Kerberos authentication end-to-end.",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-ad-admin", "role-network-admin"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-ad-recovered"]
+      },
+      "proc-lessons": {
+        "id": "proc-lessons",
+        "name": "Lessons Learned",
+        "notes": "Post-incident review: assess Tier model implementation gaps, credential hygiene failures, missing detections for DCSync/Kerberoasting, backup strategy for AD, and need for PAW/ESAE architecture.",
+        "objectives": ["PREVENTION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-commander"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-ad-recovered"],
+        "resultArtifactInStateIds": []
+      }
+    },
+    "artifacts": {
+      "art-alert": {
+        "id": "art-alert",
+        "name": "Initial Detection Alert",
+        "stateIds": ["as-alert-triggered"]
+      },
+      "art-scope": {
+        "id": "art-scope",
+        "name": "Compromise Scope Report",
+        "stateIds": ["as-scope-draft", "as-scope-final"]
+      },
+      "art-containment": {
+        "id": "art-containment",
+        "name": "Containment Status",
+        "stateIds": ["as-containment-active"]
+      },
+      "art-ransomware": {
+        "id": "art-ransomware",
+        "name": "Ransomware Assessment Report",
+        "stateIds": ["as-ransomware-assessed"]
+      },
+      "art-eradication": {
+        "id": "art-eradication",
+        "name": "Eradication Completion Report",
+        "stateIds": ["as-eradication-done"]
+      },
+      "art-recovery": {
+        "id": "art-recovery",
+        "name": "AD Recovery Status",
+        "stateIds": ["as-recovery-inprogress", "as-recovery-complete"]
+      }
+    },
+    "artifactStates": {
+      "as-alert-triggered": {
+        "id": "as-alert-triggered",
+        "name": "triggered",
+        "artifactName": "Initial Detection Alert",
+        "achievedStatus": false,
+        "instanceIds": ["asi-alert-generated"]
+      },
+      "as-scope-final": {
+        "id": "as-scope-final",
+        "name": "finalized",
+        "artifactName": "Compromise Scope Report",
+        "achievedStatus": false,
+        "instanceIds": ["asi-scope-determined"]
+      },
+      "as-scope-draft": {
+        "id": "as-scope-draft",
+        "name": "draft",
+        "artifactName": "Compromise Scope Report",
+        "achievedStatus": false,
+        "instanceIds": []
+      },
+      "as-containment-active": {
+        "id": "as-containment-active",
+        "name": "active",
+        "artifactName": "Containment Status",
+        "achievedStatus": false,
+        "instanceIds": ["asi-contained"]
+      },
+      "as-ransomware-assessed": {
+        "id": "as-ransomware-assessed",
+        "name": "assessed",
+        "artifactName": "Ransomware Assessment Report",
+        "achievedStatus": false,
+        "instanceIds": ["asi-ransomware-assessment"]
+      },
+      "as-eradication-done": {
+        "id": "as-eradication-done",
+        "name": "completed",
+        "artifactName": "Eradication Completion Report",
+        "achievedStatus": false,
+        "instanceIds": ["asi-eradication-complete"]
+      },
+      "as-recovery-inprogress": {
+        "id": "as-recovery-inprogress",
+        "name": "in progress",
+        "artifactName": "AD Recovery Status",
+        "achievedStatus": false,
+        "instanceIds": []
+      },
+      "as-recovery-complete": {
+        "id": "as-recovery-complete",
+        "name": "complete",
+        "artifactName": "AD Recovery Status",
+        "achievedStatus": false,
+        "instanceIds": ["asi-ad-recovered"]
+      }
+    },
+    "artifactStateInstances": {
+      "asi-alert-generated": {
+        "id": "asi-alert-generated",
+        "originatingActivity": "proc-detect-dcsync",
+        "usedByActivity": "proc-analysis"
+      },
+      "asi-scope-determined": {
+        "id": "asi-scope-determined",
+        "originatingActivity": "proc-lateral-path",
+        "usedByActivity": "proc-contain"
+      },
+      "asi-contained": {
+        "id": "asi-contained",
+        "originatingActivity": "proc-isolate-dc-recovery",
+        "usedByActivity": "proc-eradicate"
+      },
+      "asi-ransomware-assessment": {
+        "id": "asi-ransomware-assessment",
+        "originatingActivity": "proc-check-staging",
+        "usedByActivity": "proc-eradicate"
+      },
+      "asi-eradication-complete": {
+        "id": "asi-eradication-complete",
+        "originatingActivity": "proc-reset-all-passwords",
+        "usedByActivity": "proc-recover"
+      },
+      "asi-ad-recovered": {
+        "id": "asi-ad-recovered",
+        "originatingActivity": "proc-restore-services",
+        "usedByActivity": "proc-lessons"
+      }
+    },
+    "actuators": {
+      "act-siem": {
+        "id": "act-siem",
+        "name": "SIEM Platform",
+        "actuatorType": "MACHINE"
+      },
+      "act-edr": {
+        "id": "act-edr",
+        "name": "EDR Platform",
+        "actuatorType": "MACHINE"
+      },
+      "act-firewall": {
+        "id": "act-firewall",
+        "name": "Network Firewall / Microsegmentation",
+        "actuatorType": "MACHINE"
+      },
+      "act-ad": {
+        "id": "act-ad",
+        "name": "Active Directory Domain Services",
+        "actuatorType": "MACHINE"
+      }
+    },
+    "externalReferences": {
+      "ref-001": {
+        "id": "ref-001",
+        "name": "NIST SP 800-61r2 Incident Handling Guide",
+        "referenceType": "BEST_PRACTICE"
+      },
+      "ref-002": {
+        "id": "ref-002",
+        "name": "Microsoft AD Forest Recovery Guide",
+        "referenceType": "BEST_PRACTICE"
+      },
+      "ref-003": {
+        "id": "ref-003",
+        "name": "ANSSI Active Directory Security Hardening Guide",
+        "referenceType": "BEST_PRACTICE"
+      }
+    },
+    "roles": {
+      "role-analyst": {"id": "role-analyst", "name": "SOC Analyst"},
+      "role-commander": {"id": "role-commander", "name": "Incident Commander"},
+      "role-forensics": {"id": "role-forensics", "name": "Forensics Lead"},
+      "role-ad-admin": {"id": "role-ad-admin", "name": "AD Administrator"},
+      "role-network-admin": {"id": "role-network-admin", "name": "Network Administrator"}
+    },
+    "symbiosis": {
+      "businessObjectives": {
+        "bo-001": {
+          "id": "bo-001",
+          "scope": "All identity and authentication services within the AD forest",
+          "purpose": "Ensure trusted authentication and authorization for all organizational resources",
+          "viewpoint": "Identity & Access Management",
+          "context": "AD compromise undermines all trust in the environment as the identity provider is the root of trust for on-premise resources",
+          "relatedObjectiveIds": ["bo-002"],
+          "paragonId": null
+        },
+        "bo-002": {
+          "id": "bo-002",
+          "scope": "All AD-dependent business applications and services",
+          "purpose": "Maintain operational continuity of AD-authenticated services during incident response",
+          "viewpoint": "Business Continuity Planning",
+          "context": "AD outage during recovery impacts every domain-joined system and Kerberos-authenticated application",
+          "relatedObjectiveIds": ["bo-001", "bo-003"],
+          "paragonId": null
+        },
+        "bo-003": {
+          "id": "bo-003",
+          "scope": "AD forest recovery capability and domain controller infrastructure",
+          "purpose": "Guarantee ability to restore AD to a trusted state within defined RTO",
+          "viewpoint": "Disaster Recovery",
+          "context": "Full AD forest recovery is one of the most complex disaster recovery scenarios; preparation is critical",
+          "relatedObjectiveIds": ["bo-001", "bo-002"],
+          "paragonId": null
+        }
+      },
+      "securityMeasurementGoals": {
+        "smg-001": {
+          "id": "smg-001",
+          "viewpoint": "Identity Security Operations",
+          "context": "Credential theft is the primary vector for AD compromise escalation",
+          "scope": "All privileged accounts (Tier-0, Tier-1) and service accounts",
+          "purpose": "Measure credential exposure and rotation compliance",
+          "focus": "Time since last password change for privileged accounts, detection of credential dumping",
+          "criteria": "All Tier-0 accounts rotated within 24h of incident detection; no stale privileged accounts",
+          "businessObjectiveIds": ["bo-001"],
+          "paragonId": null
+        },
+        "smg-002": {
+          "id": "smg-002",
+          "viewpoint": "AD Infrastructure Engineering",
+          "context": "Recovery speed determines business impact duration",
+          "scope": "Domain controller infrastructure and AD replication topology",
+          "purpose": "Measure AD forest recovery readiness and execution speed",
+          "focus": "Time to restore functional AD authentication from contained DC seed",
+          "criteria": "First DC operational within 4 hours; full replication restored within 24 hours",
+          "businessObjectiveIds": ["bo-002", "bo-003"],
+          "paragonId": null
+        }
+      },
+      "securityMetrics": {
+        "sm-001": {
+          "id": "sm-001",
+          "description": "Percentage of Tier-0 accounts with credentials rotated within SLA after compromise detection",
+          "goal": "Ensure compromised credentials cannot be reused for re-entry after containment",
+          "baseMeasurementIds": ["bm-001", "bm-002"],
+          "method": "Track password last-set timestamp against incident detection time for all Tier-0 accounts",
+          "measurementFunction": "(bm-001 / bm-002) * 100",
+          "interpretation": "100% indicates all privileged credentials rotated; below 100% indicates residual compromise risk",
+          "reporting": "Hourly during active incident; daily during recovery phase",
+          "smgIds": ["smg-001"]
+        },
+        "sm-002": {
+          "id": "sm-002",
+          "description": "Time elapsed from incident declaration to functional AD authentication restoration",
+          "goal": "Minimize business disruption by achieving rapid AD recovery",
+          "baseMeasurementIds": ["bm-003"],
+          "method": "Measure elapsed time from containment completion to successful Kerberos authentication validation",
+          "measurementFunction": "recovery_complete_timestamp - containment_timestamp",
+          "interpretation": "Under 4 hours is excellent; 4-12 hours is acceptable; over 24 hours indicates DR procedure gaps",
+          "reporting": "Post-incident report; quarterly DR drill results",
+          "smgIds": ["smg-002"]
+        }
+      },
+      "baseMeasurements": {
+        "bm-001": {
+          "id": "bm-001",
+          "description": "Count of Tier-0 accounts with password reset after incident detection timestamp"
+        },
+        "bm-002": {
+          "id": "bm-002",
+          "description": "Total count of Tier-0 accounts in the forest"
+        },
+        "bm-003": {
+          "id": "bm-003",
+          "description": "Elapsed hours from containment completion to validated AD authentication restoration"
+        }
+      },
+      "dependencyModelParagonIds": ["pg-root"]
+    }
+  },
+  "representation": {"dmViews": {}, "pbViews": {}}
+}
