@@ -279,8 +279,8 @@
        Each node (paragon) has a type — AND (all children must succeed), OR (any child suffices), or
        UNCONTROLLABLE (external factor with fixed probability). Probabilities propagate from leaves to root,
        giving a quantitative view of operational risk.</p>
-    <div class="print-view-placeholder" id="print-dm-placeholder">
-      <p><em>[Dependency Model Canvas — see interactive view]</em></p>
+    <div id="print-dm-container">
+      <!-- Filled dynamically: one sub-section per DM -->
     </div>
   </div>
 
@@ -290,8 +290,8 @@
        (PlaybookProcess) specifies objectives (Detect, Contain, Eradicate, Recover), action types
        (Technical, Administrative, Physical), responsible roles, and data flows via artifacts.
        Activities can be nested into sub-processes for complex multi-stage responses.</p>
-    <div class="print-view-placeholder" id="print-pb-placeholder">
-      <p><em>[Playbook Activity Flow — see interactive view]</em></p>
+    <div id="print-pb-container">
+      <!-- Filled dynamically: one sub-section per playbook -->
     </div>
   </div>
 
@@ -305,8 +305,8 @@
       <li><strong>Step</strong> — Walk through activities in sequence, watching probabilities shift step by step.</li>
     </ul>
     <p>This view answers the key question: <em>"If we execute these response actions, how does our operational posture change?"</em></p>
-    <div class="print-view-placeholder" id="print-impact-placeholder">
-      <p><em>[Impact View Split-Pane — see interactive view]</em></p>
+    <div id="print-impact-container">
+      <!-- Filled dynamically: one sub-section per DM+playbook pair -->
     </div>
   </div>
 
@@ -387,17 +387,196 @@
 <script src="js/help.js"></script>
 <script src="js/app.js"></script>
 <script>
-// Print PDF: populate date and clone live view content into print placeholders
+// Print PDF: populate date and clone ALL views into print placeholders
 (function() {
   var dateEl = document.getElementById('print-date');
   if (dateEl) dateEl.textContent = 'Generated: ' + new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'});
+
+  function cloneSvgForPrint(svgEl) {
+    var clone = svgEl.cloneNode(true);
+    clone.removeAttribute('id');
+    clone.style.width = '100%';
+    clone.style.height = 'auto';
+    clone.style.minHeight = '300px';
+    clone.style.maxHeight = '700px';
+    clone.style.background = '#fff';
+    // Remove grid backgrounds
+    var grids = clone.querySelectorAll('rect[fill*="url"]');
+    grids.forEach(function(r) { r.setAttribute('fill', '#fff'); });
+    return clone;
+  }
+
+  function makeSubHeading(text) {
+    var h = document.createElement('h3');
+    h.style.cssText = 'margin:18px 0 6px;color:#1a237e;font-size:14px;';
+    h.textContent = text;
+    return h;
+  }
 
   window.addEventListener('beforeprint', function() {
     // Update date
     var d = document.getElementById('print-date');
     if (d) d.textContent = 'Generated: ' + new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'});
 
-    // Clone metrics content if available
+    // Get app reference
+    var app = window.app;
+    if (!app || !app.project) return;
+
+    var project = app.project;
+    var dmEditor = app.dmEditor;
+    var pbEditor = app.pbEditor;
+    var impactView = app.impactView;
+
+    // Save current state to restore later
+    var savedDM = dmEditor.dm;
+    var savedDMView = dmEditor.view;
+    var savedPBId = pbEditor.currentProcessId;
+    var savedIVDM = impactView.selectedDMId;
+    var savedIVProc = impactView.selectedRootProcessId;
+
+    // --- Section 1: All Dependency Models ---
+    var dmContainer = document.getElementById('print-dm-container');
+    if (dmContainer) {
+      dmContainer.innerHTML = '';
+      var dms = Object.values(project.model.dependencyModels);
+      if (dms.length === 0) {
+        dmContainer.innerHTML = '<p><em>No dependency models defined.</em></p>';
+      }
+      dms.forEach(function(dm) {
+        // Ensure view exists
+        if (!project.representation.dmViews[dm.id]) {
+          project.representation.dmViews[dm.id] = createDMView();
+        }
+        var view = project.representation.dmViews[dm.id];
+
+        // Temporarily render this DM (reset zoom/pan to fit)
+        var origZoom = view.zoom, origPanX = view.panX, origPanY = view.panY;
+        view.zoom = 1; view.panX = 0; view.panY = 0;
+        dmEditor.setDM(dm, view);
+
+        // Auto-fit: compute bounding box of all nodes
+        if (view.nodePositions && Object.keys(view.nodePositions).length > 0) {
+          var positions = Object.values(view.nodePositions);
+          var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+          positions.forEach(function(p) {
+            if (p.x < minX) minX = p.x;
+            if (p.y < minY) minY = p.y;
+            if (p.x > maxX) maxX = p.x;
+            if (p.y > maxY) maxY = p.y;
+          });
+          var contentW = (maxX - minX) + 220;
+          var contentH = (maxY - minY) + 100;
+          var svgRect = dmEditor.svg.getBoundingClientRect();
+          var svgW = svgRect.width || 800;
+          var svgH = svgRect.height || 500;
+          var fitZoom = Math.min(svgW / contentW, svgH / contentH, 1.5);
+          fitZoom = Math.max(0.3, Math.min(fitZoom, 1.5));
+          view.zoom = fitZoom;
+          view.panX = -minX + 20;
+          view.panY = -minY + 20;
+          dmEditor.zoom = fitZoom;
+          dmEditor.panX = view.panX;
+          dmEditor.panY = view.panY;
+          dmEditor.render();
+        }
+
+        // Clone the SVG
+        var svgClone = cloneSvgForPrint(dmEditor.svg);
+        dmContainer.appendChild(makeSubHeading(dm.name || dm.id));
+        dmContainer.appendChild(svgClone);
+
+        // Restore view state
+        view.zoom = origZoom; view.panX = origPanX; view.panY = origPanY;
+      });
+    }
+
+    // --- Section 2: All Playbooks (root processes) ---
+    var pbContainer = document.getElementById('print-pb-container');
+    if (pbContainer) {
+      pbContainer.innerHTML = '';
+      var rootProcIds = [];
+      Object.values(project.model.organisations || {}).forEach(function(org) {
+        (org.rootProcessIds || []).forEach(function(pid) {
+          if (rootProcIds.indexOf(pid) === -1) rootProcIds.push(pid);
+        });
+      });
+      if (rootProcIds.length === 0) {
+        pbContainer.innerHTML = '<p><em>No playbooks defined.</em></p>';
+      }
+      rootProcIds.forEach(function(procId) {
+        var proc = project.model.processes[procId];
+        if (!proc) return;
+
+        // Render this playbook
+        pbEditor.setProcess(procId);
+
+        // Auto-fit for playbook
+        var pbView = project.representation.pbViews[procId];
+        if (pbView && pbView.nodePositions && Object.keys(pbView.nodePositions).length > 0) {
+          var positions = Object.values(pbView.nodePositions);
+          var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+          positions.forEach(function(p) {
+            if (p.x < minX) minX = p.x;
+            if (p.y < minY) minY = p.y;
+            if (p.x > maxX) maxX = p.x;
+            if (p.y > maxY) maxY = p.y;
+          });
+          var contentW = (maxX - minX) + 220;
+          var contentH = (maxY - minY) + 100;
+          var svgRect = pbEditor.svg.getBoundingClientRect();
+          var svgW = svgRect.width || 800;
+          var svgH = svgRect.height || 500;
+          var fitZoom = Math.min(svgW / contentW, svgH / contentH, 1.5);
+          fitZoom = Math.max(0.3, Math.min(fitZoom, 1.5));
+          pbEditor.zoom = fitZoom;
+          pbEditor.panX = -minX + 20;
+          pbEditor.panY = -minY + 20;
+          pbEditor.render();
+        }
+
+        // Clone the SVG
+        var svgClone = cloneSvgForPrint(pbEditor.svg);
+        pbContainer.appendChild(makeSubHeading(proc.name || procId));
+        pbContainer.appendChild(svgClone);
+      });
+    }
+
+    // --- Section 3: Impact View for each DM+Playbook combination ---
+    var impactContainer = document.getElementById('print-impact-container');
+    if (impactContainer) {
+      impactContainer.innerHTML = '';
+      var dms = Object.values(project.model.dependencyModels);
+      var rootProcIds = [];
+      Object.values(project.model.organisations || {}).forEach(function(org) {
+        (org.rootProcessIds || []).forEach(function(pid) {
+          if (rootProcIds.indexOf(pid) === -1) rootProcIds.push(pid);
+        });
+      });
+      if (dms.length === 0 || rootProcIds.length === 0) {
+        impactContainer.innerHTML = '<p><em>No impact view available (requires both a DM and a playbook).</em></p>';
+      } else {
+        dms.forEach(function(dm) {
+          rootProcIds.forEach(function(procId) {
+            var proc = project.model.processes[procId];
+            if (!proc) return;
+            impactView.selectedDMId = dm.id;
+            impactView.selectedRootProcessId = procId;
+            impactView.render();
+            var svgClone = cloneSvgForPrint(impactView.svg);
+            var label = (proc.name || procId) + ' \u2194 ' + (dm.name || dm.id);
+            impactContainer.appendChild(makeSubHeading(label));
+            impactContainer.appendChild(svgClone);
+          });
+        });
+      }
+    }
+
+    // --- Section 4-6: Clone DOM content (metrics, symbiosis, MITRE) ---
+    // First ensure they are rendered
+    if (app._renderMetrics) app._renderMetrics();
+    if (app._renderSymbiosis) app._renderSymbiosis();
+    if (app._renderMitreView) app._renderMitreView();
+
     var pairs = [
       ['metrics-content', 'print-metrics-placeholder'],
       ['symbiosis-content', 'print-symbiosis-placeholder'],
@@ -414,30 +593,12 @@
       }
     });
 
-    // Clone SVG canvases
-    var svgPairs = [
-      ['dm-canvas', 'print-dm-placeholder'],
-      ['pb-canvas', 'print-pb-placeholder'],
-      ['impact-canvas', 'print-impact-placeholder']
-    ];
-    svgPairs.forEach(function(p) {
-      var svg = document.getElementById(p[0]);
-      var dst = document.getElementById(p[1]);
-      if (svg && dst) {
-        var clone = svg.cloneNode(true);
-        clone.removeAttribute('id');
-        clone.style.width = '100%';
-        clone.style.height = 'auto';
-        clone.style.minHeight = '300px';
-        clone.style.maxHeight = '600px';
-        clone.style.background = '#fff';
-        // Remove grid backgrounds
-        var grids = clone.querySelectorAll('rect[fill*="url"]');
-        grids.forEach(function(r) { r.setAttribute('fill', '#fff'); });
-        dst.innerHTML = '';
-        dst.appendChild(clone);
-      }
-    });
+    // --- Restore original state ---
+    dmEditor.setDM(savedDM, savedDMView || {});
+    if (savedPBId) pbEditor.setProcess(savedPBId);
+    impactView.selectedDMId = savedIVDM;
+    impactView.selectedRootProcessId = savedIVProc;
+    impactView.render();
   });
 })();
 </script>

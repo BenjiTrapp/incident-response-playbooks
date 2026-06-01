@@ -925,21 +925,25 @@ const HelpPanel = {
         <strong>Main paper (FRIPP):</strong><br>
         Shaked et al. (2023). <em>Operations-informed incident response playbooks.</em>
         Computers &amp; Security. — Defines FRIPP metamodel, ActivityImpact, CiO metric.
+        <br><a href="https://www.sciencedirect.com/science/article/pii/S0167404823003024" target="_blank" rel="noopener">View on ScienceDirect (Open Access)</a>
       </li>
       <li>
         <strong>FRIPP metamodel (ARES 2022):</strong><br>
         Shaked et al. (2022). <em>FRIPP — A metamodel for formalised response to incidents process playbooks.</em>
         ARES 2022. — Defines PlaybookProcess, Actuator, ActivityImpact, Organisation, Role.
+        <br><a href="https://dl.acm.org/doi/10.1145/3538969.3544427" target="_blank" rel="noopener">View on ACM Digital Library</a>
       </li>
       <li>
         <strong>PROVE process model (ICED21):</strong><br>
         Shaked et al. (2022). <em>PROVE Tool.</em> ICED21. — Defines the artifact-centric
         process modelling foundation (Process, Artifact, ArtifactState, ArtifactStateInstance, Resource).
+        <br><a href="https://doi.org/10.1017/pds.2021.68" target="_blank" rel="noopener">View on Cambridge University Press</a>
       </li>
       <li>
         <strong>Dependency Model (2022):</strong><br>
         Cherdantseva et al. (2022). <em>SCADA Dependency Model.</em> — Defines the
         AND/OR paragon tree and probability computation rules.
+        <br><a href="https://www.mdpi.com/2076-3417/12/10/4880" target="_blank" rel="noopener">View on MDPI (Open Access)</a>
       </li>
     </ul>
   </div>
