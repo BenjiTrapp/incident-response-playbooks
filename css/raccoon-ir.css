@@ -856,6 +856,25 @@ input[type="range"] { background: none; border: none; padding: 0; width: 100%; c
     border-radius: 4px;
   }
 
+  /* Landscape pages for large SVG diagrams */
+  @page landscape-page {
+    size: A4 landscape;
+    margin: 15mm;
+  }
+
+  .print-landscape {
+    page: landscape-page;
+    page-break-before: always;
+    page-break-inside: avoid;
+  }
+
+  .print-landscape svg {
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+  }
+
   .print-summary pre {
     font-family: 'Consolas', 'Courier New', monospace;
     font-size: 9pt;

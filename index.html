@@ -393,17 +393,45 @@
   if (dateEl) dateEl.textContent = 'Generated: ' + new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'});
 
   function cloneSvgForPrint(svgEl) {
+    // Compute bounding box of content before cloning
+    var viewport = svgEl.querySelector('g[id$="-viewport"]');
+    var bbox = null;
+    if (viewport) {
+      try { bbox = viewport.getBBox(); } catch(e) {}
+    }
+
     var clone = svgEl.cloneNode(true);
     clone.removeAttribute('id');
-    clone.style.width = '100%';
-    clone.style.height = 'auto';
-    clone.style.minHeight = '300px';
-    clone.style.maxHeight = '700px';
     clone.style.background = '#fff';
+
     // Remove grid backgrounds
     var grids = clone.querySelectorAll('rect[fill*="url"]');
     grids.forEach(function(r) { r.setAttribute('fill', '#fff'); });
-    return clone;
+
+    // Set viewBox to fit content and reset the viewport transform
+    if (bbox && bbox.width > 0 && bbox.height > 0) {
+      var pad = 30;
+      var vx = bbox.x - pad;
+      var vy = bbox.y - pad;
+      var vw = bbox.width + pad * 2;
+      var vh = bbox.height + pad * 2;
+      clone.setAttribute('viewBox', vx + ' ' + vy + ' ' + vw + ' ' + vh);
+      clone.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+      // Remove transform on viewport so viewBox governs layout
+      var cloneViewport = clone.querySelector('g[id$="-viewport"]');
+      if (cloneViewport) cloneViewport.removeAttribute('transform');
+    }
+
+    clone.style.width = '100%';
+    clone.style.height = 'auto';
+    clone.removeAttribute('width');
+    clone.removeAttribute('height');
+
+    // Wrap in landscape container
+    var wrapper = document.createElement('div');
+    wrapper.className = 'print-landscape';
+    wrapper.appendChild(clone);
+    return wrapper;
   }
 
   function makeSubHeading(text) {
@@ -411,6 +439,113 @@
     h.style.cssText = 'margin:18px 0 6px;color:#1a237e;font-size:14px;';
     h.textContent = text;
     return h;
+  }
+
+  /**
+   * Build a detailed textual breakdown of a playbook process tree.
+   * Renders each activity with objectives, action type, roles, notes, artifacts, and sub-activities.
+   */
+  function buildPlaybookDetails(procId, project, depth) {
+    depth = depth || 0;
+    var proc = project.model.processes[procId];
+    if (!proc) return null;
+
+    var container = document.createElement('div');
+    container.style.cssText = 'margin-left:' + (depth * 20) + 'px; margin-bottom:12px; padding:8px 12px; border-left:3px solid ' + (depth === 0 ? '#a855f7' : '#ccc') + '; background:' + (depth % 2 === 0 ? '#fafafa' : '#fff') + ';';
+
+    // Activity name
+    var title = document.createElement('h4');
+    title.style.cssText = 'margin:0 0 4px; font-size:12pt; color:#1a237e;';
+    title.textContent = proc.name || '(unnamed)';
+    container.appendChild(title);
+
+    // Meta info line
+    var meta = [];
+    if (proc.objectives && proc.objectives.length > 0) {
+      meta.push('Objectives: ' + proc.objectives.join(', '));
+    }
+    if (proc.actionType) {
+      meta.push('Action Type: ' + proc.actionType);
+    }
+    if (proc.associatedRoleIds && proc.associatedRoleIds.length > 0) {
+      var roleNames = proc.associatedRoleIds.map(function(rid) {
+        var role = project.model.roles[rid];
+        return role ? role.name : rid;
+      });
+      meta.push('Roles: ' + roleNames.join(', '));
+    }
+    if (meta.length > 0) {
+      var metaEl = document.createElement('p');
+      metaEl.style.cssText = 'margin:0 0 4px; font-size:9pt; color:#555;';
+      metaEl.textContent = meta.join(' | ');
+      container.appendChild(metaEl);
+    }
+
+    // Notes
+    if (proc.notes && proc.notes.trim()) {
+      var notes = document.createElement('p');
+      notes.style.cssText = 'margin:0 0 4px; font-size:10pt; color:#333;';
+      notes.textContent = proc.notes;
+      container.appendChild(notes);
+    }
+
+    // Artifacts consumed
+    if (proc.artifactInStateUsedIds && proc.artifactInStateUsedIds.length > 0) {
+      var inputs = proc.artifactInStateUsedIds.map(function(instId) {
+        var inst = project.model.artifactStateInstances[instId];
+        if (!inst) return null;
+        var state = project.model.artifactStates[inst.artifactStateId];
+        return state ? (state.artifactName + ' [' + state.name + ']') : instId;
+      }).filter(Boolean);
+      if (inputs.length > 0) {
+        var inEl = document.createElement('p');
+        inEl.style.cssText = 'margin:0 0 2px; font-size:9pt; color:#666;';
+        inEl.innerHTML = '<strong>Inputs:</strong> ' + inputs.join(', ');
+        container.appendChild(inEl);
+      }
+    }
+
+    // Artifacts produced
+    if (proc.resultArtifactInStateIds && proc.resultArtifactInStateIds.length > 0) {
+      var outputs = proc.resultArtifactInStateIds.map(function(instId) {
+        var inst = project.model.artifactStateInstances[instId];
+        if (!inst) return null;
+        var state = project.model.artifactStates[inst.artifactStateId];
+        return state ? (state.artifactName + ' [' + state.name + ']') : instId;
+      }).filter(Boolean);
+      if (outputs.length > 0) {
+        var outEl = document.createElement('p');
+        outEl.style.cssText = 'margin:0 0 2px; font-size:9pt; color:#666;';
+        outEl.innerHTML = '<strong>Outputs:</strong> ' + outputs.join(', ');
+        container.appendChild(outEl);
+      }
+    }
+
+    // MITRE ATT&CK
+    if (proc.mitreTechniques && proc.mitreTechniques.length > 0) {
+      var mitreEl = document.createElement('p');
+      mitreEl.style.cssText = 'margin:0 0 2px; font-size:9pt; color:#666;';
+      mitreEl.innerHTML = '<strong>ATT&CK:</strong> ' + proc.mitreTechniques.map(function(t) { return t.techniqueName || t.techniqueId; }).join(', ');
+      container.appendChild(mitreEl);
+    }
+
+    // MITRE D3FEND
+    if (proc.mitreDefend && proc.mitreDefend.length > 0) {
+      var defendEl = document.createElement('p');
+      defendEl.style.cssText = 'margin:0 0 2px; font-size:9pt; color:#666;';
+      defendEl.innerHTML = '<strong>D3FEND:</strong> ' + proc.mitreDefend.map(function(t) { return t.techniqueName || t.techniqueId; }).join(', ');
+      container.appendChild(defendEl);
+    }
+
+    // Recurse into sub-processes
+    if (proc.subProcessIds && proc.subProcessIds.length > 0) {
+      proc.subProcessIds.forEach(function(childId) {
+        var childEl = buildPlaybookDetails(childId, project, depth + 1);
+        if (childEl) container.appendChild(childEl);
+      });
+    }
+
+    return container;
   }
 
   window.addEventListener('beforeprint', function() {
@@ -482,7 +617,7 @@
 
         // Clone the SVG
         var svgClone = cloneSvgForPrint(dmEditor.svg);
-        dmContainer.appendChild(makeSubHeading(dm.name || dm.id));
+        svgClone.insertBefore(makeSubHeading(dm.name || dm.id), svgClone.firstChild);
         dmContainer.appendChild(svgClone);
 
         // Restore view state
@@ -536,8 +671,21 @@
 
         // Clone the SVG
         var svgClone = cloneSvgForPrint(pbEditor.svg);
-        pbContainer.appendChild(makeSubHeading(proc.name || procId));
+        svgClone.insertBefore(makeSubHeading(proc.name || procId), svgClone.firstChild);
         pbContainer.appendChild(svgClone);
+
+        // Add detailed activity breakdown
+        var details = buildPlaybookDetails(procId, project, 0);
+        if (details) {
+          var detailsWrapper = document.createElement('div');
+          detailsWrapper.style.cssText = 'page-break-before:always; margin-bottom:24px;';
+          var detailsHeading = document.createElement('h3');
+          detailsHeading.style.cssText = 'margin:0 0 12px;color:#1a237e;font-size:13pt;border-bottom:1px solid #a855f7;padding-bottom:4px;';
+          detailsHeading.textContent = (proc.name || procId) + ' — Activity Details';
+          detailsWrapper.appendChild(detailsHeading);
+          detailsWrapper.appendChild(details);
+          pbContainer.appendChild(detailsWrapper);
+        }
       });
     }
 
@@ -564,7 +712,7 @@
             impactView.render();
             var svgClone = cloneSvgForPrint(impactView.svg);
             var label = (proc.name || procId) + ' \u2194 ' + (dm.name || dm.id);
-            impactContainer.appendChild(makeSubHeading(label));
+            svgClone.insertBefore(makeSubHeading(label), svgClone.firstChild);
             impactContainer.appendChild(svgClone);
           });
         });
