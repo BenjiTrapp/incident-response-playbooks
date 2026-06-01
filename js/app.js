@@ -31,6 +31,7 @@ class RaccoonIRApp {
     this._initEditors();
     this._initPanelResize();
     this._bindUI();
+    this._initZoomButtons();
 
     // Restore last session from localStorage if available
     const saved = localStorage.getItem('raccoon-ir-autosave');
@@ -3910,6 +3911,52 @@ class RaccoonIRApp {
   updateZoom(zoom) {
     const zd = document.getElementById('zoom-display');
     if (zd) zd.textContent = Math.round(zoom * 100) + '%';
+  }
+
+  /* ---- Zoom Button Handlers ---- */
+  _initZoomButtons() {
+    const wire = (btnId, direction) => {
+      const btn = document.getElementById(btnId);
+      if (!btn) return;
+      btn.addEventListener('click', () => this._zoomByButton(btnId, direction));
+    };
+    wire('dm-zoom-in', 1);
+    wire('dm-zoom-out', -1);
+    wire('pb-zoom-in', 1);
+    wire('pb-zoom-out', -1);
+    wire('impact-zoom-in', 1);
+    wire('impact-zoom-out', -1);
+  }
+
+  _zoomByButton(btnId, direction) {
+    const factor = direction > 0 ? 1.2 : 1 / 1.2;
+    if (btnId.startsWith('dm') && this.dmEditor) {
+      const editor = this.dmEditor;
+      const rect = editor.svg.getBoundingClientRect();
+      const cx = rect.width / 2, cy = rect.height / 2;
+      editor.panX = cx - (cx - editor.panX) * factor;
+      editor.panY = cy - (cy - editor.panY) * factor;
+      editor.zoom = Math.max(0.1, Math.min(5, editor.zoom * factor));
+      if (editor.view) { editor.view.zoom = editor.zoom; editor.view.panX = editor.panX; editor.view.panY = editor.panY; }
+      editor._applyTransform();
+      this.updateZoom(editor.zoom);
+    } else if (btnId.startsWith('pb') && this.pbEditor) {
+      const editor = this.pbEditor;
+      const rect = editor.svg.getBoundingClientRect();
+      const cx = rect.width / 2, cy = rect.height / 2;
+      editor.panX = cx - (cx - editor.panX) * factor;
+      editor.panY = cy - (cy - editor.panY) * factor;
+      editor.zoom = Math.max(0.1, Math.min(5, editor.zoom * factor));
+      const view = editor.project && editor.project.representation.pbViews[editor.currentProcessId];
+      if (view) { view.zoom = editor.zoom; view.panX = editor.panX; view.panY = editor.panY; }
+      editor._applyTransform();
+      this.updateZoom(editor.zoom);
+    } else if (btnId.startsWith('impact') && this.impactView) {
+      const iv = this.impactView;
+      if (iv._dmZoom === null) iv._dmZoom = 1;
+      iv._dmZoom = Math.max(0.1, Math.min(5, iv._dmZoom * factor));
+      iv.render();
+    }
   }
 
   updateCoords(x, y) {

@@ -33,7 +33,7 @@ A browser-based modelling tool for designing, analysing, and executing **operati
 ### Additional
 - **Cross-DM References** — link paragons across multiple dependency models
 - **SYMBIOSIS Module** — GQM-based security measurement framework
-- **Example Library** — 5 real-world IR playbooks mapped to ATT&CK + D3FEND
+- **Example Library** — 11 real-world IR playbooks mapped to ATT&CK + D3FEND
 
 ---
 
@@ -67,6 +67,9 @@ Or deploy directly to **GitHub Pages** — no build step required.
 | `supply-chain-t1195.json` | Supply Chain Compromise Response | T1195, T1059, T1105 | D3-SV, D3-HV, D3-NTA |
 | `insider-threat-t1078.json` | Insider Threat Response | T1078, T1074, T1530 | D3-UBA, D3-AM, D3-SDA |
 | `data-exfiltration-t1041.json` | Data Exfiltration Response | T1041, T1560, T1048 | D3-NTA, D3-DLP, D3-OTF |
+| `credential-leakage-github-t1552.json` | Credential Leakage via Public GitHub Repository | T1552, T1078, T1213, T1021 | D3-CS, D3-OSM, D3-UGLPA, D3-CRO, D3-AL, D3-CH |
+| `infostealer-rat-t1555.json` | Infostealer with RAT on Developer Workstation | T1555, T1219, T1071, T1539, T1059 | D3-OSM, D3-NTCD, D3-PSA, D3-NI, D3-CRO, D3-EAL |
+| `ad-compromise-t1003.json` | Active Directory On-Premise Compromise | T1003, T1558, T1550, T1482, T1484 | D3-OSM, D3-NTCD, D3-NI, D3-AL, D3-CRO, D3-DAM |
 
 ---
 

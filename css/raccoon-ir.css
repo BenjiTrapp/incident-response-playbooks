@@ -259,7 +259,7 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 
 #canvas-container { flex: 1; position: relative; overflow: hidden; }
 .view-panel { position: absolute; inset: 0; display: none; }
-.view-panel.active { display: flex; flex-direction: column; }
+.view-panel.active { display: flex; flex-direction: column; position: absolute; }
 
 #dm-canvas, #pb-canvas, #impact-canvas {
   flex: 1;
@@ -267,6 +267,37 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
   cursor: default;
   background: var(--bg-primary);
   display: block;
+}
+
+/* Zoom controls overlay */
+.zoom-controls {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 10;
+}
+.zoom-btn {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: background 0.15s;
+}
+.zoom-btn:hover {
+  background: var(--accent);
+  color: #fff;
 }
 
 .tool-select {
