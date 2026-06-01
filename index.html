@@ -32,6 +32,8 @@
       <button id="btn-redo" title="Redo" disabled>Redo</button>
       <span class="sep-btn"></span>
       <button id="btn-help" title="Help, Tutorial &amp; Metamodels">? Help</button>
+      <span class="sep-btn"></span>
+      <button id="btn-print" title="Print / Download as PDF" onclick="window.print()">Print PDF</button>
       <span id="current-filename" class="current-filename-display" title="Current file" style="display:none"></span>
     </div>
   </div>
@@ -243,6 +245,136 @@
        style="display:none">
 
 <!-- ============================================================
+     PRINT-ONLY CONTENT  (visible only in @media print)
+     ============================================================ -->
+<div id="print-overview">
+
+  <div class="print-cover">
+    <div class="print-logo">🦝</div>
+    <h1>RaccoonIR</h1>
+    <h2>Purple Team Incident Response Playbook</h2>
+    <p class="print-subtitle">Comprehensive Playbook Overview &amp; Simulation Report</p>
+    <p class="print-date" id="print-date"></p>
+  </div>
+
+  <div class="print-section print-intro">
+    <h2>How This Playbook Works</h2>
+    <p>RaccoonIR is a structured incident response playbook planner that connects <strong>system dependency models</strong>
+       (what can go wrong) with <strong>response activities</strong> (what we do about it). The core workflow is:</p>
+    <ol>
+      <li><strong>Model the System</strong> — Define operational goals as Dependency Model trees, where each goal
+          depends on sub-goals connected by AND/OR/UNCONTROLLABLE gates with probability values.</li>
+      <li><strong>Design the Playbook</strong> — Create hierarchical response activities with roles, objectives,
+          action types, data flows (artifacts), and MITRE ATT&amp;CK/D3FEND mappings.</li>
+      <li><strong>Link Activities to Goals</strong> — Connect playbook activities to dependency model paragons via
+          ActivityImpacts, specifying how each response action changes the probability of an operational outcome.</li>
+      <li><strong>Simulate &amp; Analyse</strong> — Use the Impact View to run what-if simulations, stepping through
+          activities to see how cumulative response actions shift system probabilities and the Change in Operations (CiO) metric.</li>
+    </ol>
+  </div>
+
+  <div class="print-section">
+    <h2>Section 1: Dependency Models</h2>
+    <p>The dependency model represents the system's operational goal structure as a directed acyclic graph (DAG).
+       Each node (paragon) has a type — AND (all children must succeed), OR (any child suffices), or
+       UNCONTROLLABLE (external factor with fixed probability). Probabilities propagate from leaves to root,
+       giving a quantitative view of operational risk.</p>
+    <div class="print-view-placeholder" id="print-dm-placeholder">
+      <p><em>[Dependency Model Canvas — see interactive view]</em></p>
+    </div>
+  </div>
+
+  <div class="print-section">
+    <h2>Section 2: Playbooks</h2>
+    <p>Playbooks define the incident response process as hierarchical activity diagrams. Each activity
+       (PlaybookProcess) specifies objectives (Detect, Contain, Eradicate, Recover), action types
+       (Technical, Administrative, Physical), responsible roles, and data flows via artifacts.
+       Activities can be nested into sub-processes for complex multi-stage responses.</p>
+    <div class="print-view-placeholder" id="print-pb-placeholder">
+      <p><em>[Playbook Activity Flow — see interactive view]</em></p>
+    </div>
+  </div>
+
+  <div class="print-section">
+    <h2>Section 3: Impact View — Cross-Model Simulation</h2>
+    <p>The Impact View is the central analysis tool. It shows playbook activities (left) and the dependency
+       model (right) side-by-side, connected by ActivityImpact arrows. Three simulation modes are available:</p>
+    <ul>
+      <li><strong>Preview</strong> — Click any activity to instantly see its isolated effect on system probabilities.</li>
+      <li><strong>Execute</strong> — Toggle activities as "executed" to see cumulative impact build up.</li>
+      <li><strong>Step</strong> — Walk through activities in sequence, watching probabilities shift step by step.</li>
+    </ul>
+    <p>This view answers the key question: <em>"If we execute these response actions, how does our operational posture change?"</em></p>
+    <div class="print-view-placeholder" id="print-impact-placeholder">
+      <p><em>[Impact View Split-Pane — see interactive view]</em></p>
+    </div>
+  </div>
+
+  <div class="print-section">
+    <h2>Section 4: Metrics</h2>
+    <p>The Metrics tab presents computed values for every paragon in the dependency model:</p>
+    <ul>
+      <li><strong>Probability (P)</strong> — Current likelihood the paragon's condition holds (propagated through AND/OR gates).</li>
+      <li><strong>Change in Operations (CiO)</strong> — The difference in probability before vs. after applying activity impacts.
+          Positive CiO means the response improves the situation; negative means degradation.</li>
+      <li><strong>Critical Threshold</strong> — A user-defined boundary below which an alert fires, highlighting paragons at risk.</li>
+    </ul>
+    <div class="print-view-placeholder" id="print-metrics-placeholder">
+      <p><em>[Metrics Report — see interactive view]</em></p>
+    </div>
+  </div>
+
+  <div class="print-section">
+    <h2>Section 5: SYMBIOSIS</h2>
+    <p>The SYMBIOSIS module maps business objectives to security measurement goals, security metrics,
+       and base measurements — creating a traceable chain from strategic intent to measurable security KPIs.
+       This ensures the playbook's response activities are aligned with organisational goals.</p>
+    <div class="print-view-placeholder" id="print-symbiosis-placeholder">
+      <p><em>[SYMBIOSIS Alignment — see interactive view]</em></p>
+    </div>
+  </div>
+
+  <div class="print-section">
+    <h2>Section 6: MITRE ATT&amp;CK / D3FEND Mapping</h2>
+    <p>Each playbook activity can be tagged with MITRE ATT&amp;CK techniques (adversary actions being countered)
+       and MITRE D3FEND countermeasures (defensive techniques being applied). The MITRE View aggregates
+       these mappings to show full technique coverage across the playbook, identifying gaps in detection
+       and response capability.</p>
+    <div class="print-view-placeholder" id="print-mitre-placeholder">
+      <p><em>[MITRE ATT&amp;CK/D3FEND Coverage — see interactive view]</em></p>
+    </div>
+  </div>
+
+  <div class="print-section print-summary">
+    <h2>Data Flow Summary</h2>
+    <pre>
+┌─────────────────────┐        ActivityImpact        ┌──────────────────────┐
+│   PLAYBOOK          │─────────────────────────────▶│  DEPENDENCY MODEL    │
+│   (Response Actions)│    "Activity X changes       │  (System Goals)      │
+│                     │     Paragon Y's probability  │                      │
+│  • Activities       │     from 40% → 85%"         │  • AND/OR/UNC gates  │
+│  • Data Flows       │                              │  • Probabilities     │
+│  • Roles & Actors   │                              │  • Critical Thresholds│
+└─────────────────────┘                              └──────────────────────┘
+         │                                                      │
+         ▼                                                      ▼
+┌─────────────────────┐                              ┌──────────────────────┐
+│  MITRE ATT&amp;CK/D3FEND│                              │  METRICS ENGINE      │
+│  (Technique Mapping)│                              │  P, CiO, Thresholds │
+└─────────────────────┘                              └──────────────────────┘
+         │                                                      │
+         └──────────────────────┬───────────────────────────────┘
+                                ▼
+                   ┌────────────────────────┐
+                   │  SYMBIOSIS             │
+                   │  (Business Alignment)  │
+                   └────────────────────────┘
+    </pre>
+  </div>
+
+</div>
+
+<!-- ============================================================
      SCRIPTS  (load order: models → metrics → storage → editors → app)
      ============================================================ -->
 <script src="js/models.js"></script>
@@ -254,6 +386,61 @@
 <script src="js/metamodel-data.js"></script>
 <script src="js/help.js"></script>
 <script src="js/app.js"></script>
+<script>
+// Print PDF: populate date and clone live view content into print placeholders
+(function() {
+  var dateEl = document.getElementById('print-date');
+  if (dateEl) dateEl.textContent = 'Generated: ' + new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'});
+
+  window.addEventListener('beforeprint', function() {
+    // Update date
+    var d = document.getElementById('print-date');
+    if (d) d.textContent = 'Generated: ' + new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'});
+
+    // Clone metrics content if available
+    var pairs = [
+      ['metrics-content', 'print-metrics-placeholder'],
+      ['symbiosis-content', 'print-symbiosis-placeholder'],
+      ['mitre-content', 'print-mitre-placeholder']
+    ];
+    pairs.forEach(function(p) {
+      var src = document.getElementById(p[0]);
+      var dst = document.getElementById(p[1]);
+      if (src && dst && src.innerHTML.trim()) {
+        dst.innerHTML = src.innerHTML;
+        dst.style.textAlign = 'left';
+        dst.style.background = '#fff';
+        dst.style.border = 'none';
+      }
+    });
+
+    // Clone SVG canvases
+    var svgPairs = [
+      ['dm-canvas', 'print-dm-placeholder'],
+      ['pb-canvas', 'print-pb-placeholder'],
+      ['impact-canvas', 'print-impact-placeholder']
+    ];
+    svgPairs.forEach(function(p) {
+      var svg = document.getElementById(p[0]);
+      var dst = document.getElementById(p[1]);
+      if (svg && dst) {
+        var clone = svg.cloneNode(true);
+        clone.removeAttribute('id');
+        clone.style.width = '100%';
+        clone.style.height = 'auto';
+        clone.style.minHeight = '300px';
+        clone.style.maxHeight = '600px';
+        clone.style.background = '#fff';
+        // Remove grid backgrounds
+        var grids = clone.querySelectorAll('rect[fill*="url"]');
+        grids.forEach(function(r) { r.setAttribute('fill', '#fff'); });
+        dst.innerHTML = '';
+        dst.appendChild(clone);
+      }
+    });
+  });
+})();
+</script>
 
 </body>
 </html>

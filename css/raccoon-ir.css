@@ -764,3 +764,111 @@ input[type="range"] { background: none; border: none; padding: 0; width: 100%; c
 .about-refs { list-style: none; display: flex; flex-direction: column; gap: 12px; }
 .about-refs li { font-size: 12px; color: var(--text-secondary); line-height: 1.6; border-left: 3px solid var(--border-light); padding-left: 12px; }
 .about-refs strong { color: var(--text-primary); }
+
+/* ===== PRINT / PDF STYLES ===== */
+
+/* Hide print-overview in normal view */
+#print-overview { display: none; }
+
+@media print {
+  * { overflow: visible !important; }
+
+  body {
+    background: #fff !important;
+    color: #111 !important;
+    height: auto !important;
+    width: auto !important;
+    overflow: visible !important;
+    font-size: 11pt;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    line-height: 1.6;
+  }
+
+  #app {
+    height: auto !important;
+    display: block !important;
+  }
+
+  /* Hide interactive chrome */
+  #app-header,
+  #tab-bar,
+  #status-bar,
+  #context-menu,
+  #modal-overlay,
+  #file-input,
+  .zoom-controls,
+  .panel-resizer,
+  #view-toolbar,
+  #btn-print {
+    display: none !important;
+  }
+
+  /* Show the print overview document */
+  #print-overview {
+    display: block !important;
+    padding: 0 20px;
+  }
+
+  /* Cover page */
+  .print-cover {
+    text-align: center;
+    padding: 80px 0 60px;
+    page-break-after: always;
+    border-bottom: 3px solid #333;
+  }
+  .print-cover .print-logo { font-size: 72px; margin-bottom: 16px; }
+  .print-cover h1 { font-size: 36pt; margin-bottom: 8px; color: #1a1a2e; }
+  .print-cover h2 { font-size: 18pt; color: #444; font-weight: 400; margin-bottom: 24px; }
+  .print-cover .print-subtitle { font-size: 12pt; color: #666; margin-bottom: 12px; }
+  .print-cover .print-date { font-size: 11pt; color: #888; }
+
+  /* Sections */
+  .print-section {
+    page-break-inside: avoid;
+    margin-bottom: 32px;
+    padding-top: 16px;
+  }
+  .print-section h2 {
+    font-size: 16pt;
+    color: #1a1a2e;
+    border-bottom: 2px solid #a855f7;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+  }
+  .print-section p {
+    margin-bottom: 10px;
+    color: #222;
+  }
+  .print-section ol,
+  .print-section ul {
+    margin: 8px 0 12px 24px;
+    color: #222;
+  }
+  .print-section li { margin-bottom: 6px; }
+  .print-section strong { color: #000; }
+
+  .print-view-placeholder {
+    background: #f5f5f5;
+    border: 1px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    margin: 12px 0;
+    border-radius: 4px;
+  }
+
+  .print-summary pre {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 9pt;
+    line-height: 1.4;
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+    padding: 16px;
+    overflow: visible;
+    white-space: pre;
+  }
+
+  /* Hide the interactive canvas views (covered by print-overview descriptions) */
+  #main-content {
+    display: none !important;
+  }
+}
