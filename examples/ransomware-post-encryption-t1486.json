@@ -1,0 +1,802 @@
+{
+  "name": "Ransomware Post-Encryption Response (T1486)",
+  "version": "1.0",
+  "snapshots": [],
+  "baseline": null,
+  "createdAt": "2025-01-15T00:00:00.000Z",
+  "model": {
+    "dependencyModels": {
+      "dm-001": {
+        "id": "dm-001",
+        "name": "Encrypted Environment Recovery & Business Restoration",
+        "rootId": "pg-root",
+        "paragons": {
+          "pg-root": {
+            "id": "pg-root",
+            "description": "Encrypted Environment Recovery & Business Restoration",
+            "type": "AND",
+            "leafProbability": 1.0,
+            "childIds": ["pg-attack-understood", "pg-threat-contained", "pg-infrastructure-restored", "pg-security-posture-improved"],
+            "criticalThreshold": 0.5,
+            "notifyMode": "REQUEST_APPROVAL",
+            "stakeholders": [{"name": "CISO", "contact": "ciso@example.com", "roleId": null}, {"name": "CEO", "contact": "ceo@example.com", "roleId": null}, {"name": "Legal Counsel", "contact": "legal@example.com", "roleId": null}]
+          },
+          "pg-attack-understood": {
+            "id": "pg-attack-understood",
+            "description": "Attack Scope & Variant Fully Understood",
+            "type": "AND",
+            "leafProbability": 1.0,
+            "childIds": ["pg-variant-identified", "pg-encryption-scope-known"],
+            "criticalThreshold": 0.5,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-threat-contained": {
+            "id": "pg-threat-contained",
+            "description": "Threat Actor Fully Contained",
+            "type": "AND",
+            "leafProbability": 1.0,
+            "childIds": ["pg-c2-blocked", "pg-lateral-blocked", "pg-credentials-rotated"],
+            "criticalThreshold": 0.6,
+            "notifyMode": "REQUEST_APPROVAL",
+            "stakeholders": []
+          },
+          "pg-infrastructure-restored": {
+            "id": "pg-infrastructure-restored",
+            "description": "Infrastructure Rebuilt or Restored",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.3,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "REQUEST_APPROVAL",
+            "stakeholders": []
+          },
+          "pg-security-posture-improved": {
+            "id": "pg-security-posture-improved",
+            "description": "Security Posture Hardened Against Recurrence",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.4,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-variant-identified": {
+            "id": "pg-variant-identified",
+            "description": "Ransomware variant and affiliate identified",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.5,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-encryption-scope-known": {
+            "id": "pg-encryption-scope-known",
+            "description": "Full encryption scope mapped across infrastructure",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.4,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-c2-blocked": {
+            "id": "pg-c2-blocked",
+            "description": "All C2 communications blocked",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.5,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-lateral-blocked": {
+            "id": "pg-lateral-blocked",
+            "description": "Lateral movement paths eliminated",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.4,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          },
+          "pg-credentials-rotated": {
+            "id": "pg-credentials-rotated",
+            "description": "All compromised credentials rotated",
+            "type": "UNCONTROLLABLE",
+            "leafProbability": 0.6,
+            "childIds": [],
+            "criticalThreshold": null,
+            "notifyMode": "NOTIFY_ONLY",
+            "stakeholders": []
+          }
+        }
+      }
+    },
+    "organisations": {
+      "org-001": {
+        "id": "org-001",
+        "name": "Incident Response Team",
+        "roleIds": ["role-analyst", "role-commander", "role-forensics", "role-sysadmin", "role-legal"],
+        "rootProcessIds": ["proc-root"]
+      }
+    },
+    "processes": {
+      "proc-root": {
+        "id": "proc-root",
+        "name": "Ransomware Post-Encryption Response",
+        "notes": "Response playbook for when ransomware has ALREADY been deployed and encrypted the environment. Covers analysis of encryption scope, containment of remaining threat actor access, recovery decision (rebuild vs. pay ransom), and post-incident hardening to prevent re-attack.",
+        "objectives": [],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-commander"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": ["ref-001", "ref-002"],
+        "mitreTechniques": [{"techniqueId": "T1486", "techniqueName": "Data Encrypted for Impact", "tactic": "Impact", "url": "https://attack.mitre.org/techniques/T1486/"}, {"techniqueId": "T1490", "techniqueName": "Inhibit System Recovery", "tactic": "Impact", "url": "https://attack.mitre.org/techniques/T1490/"}],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-analysis-post-encrypt", "proc-contain-post-encrypt", "proc-recovery-decision", "proc-post-incident"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-analysis-post-encrypt": {
+        "id": "proc-analysis-post-encrypt",
+        "name": "Analysis & Scope Assessment",
+        "notes": "Determine ransomware variant, affiliate group, full scope of encryption, lateral movement paths used, and whether data was exfiltrated. Understand the attack lifecycle — did threat actors spend days or months inside before deploying?",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-forensics", "role-analyst"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1486", "techniqueName": "Data Encrypted for Impact", "tactic": "Impact", "url": "https://attack.mitre.org/techniques/T1486/"}, {"techniqueId": "T1021", "techniqueName": "Remote Services", "tactic": "Lateral Movement", "url": "https://attack.mitre.org/techniques/T1021/"}],
+        "mitreDefend": [{"techniqueId": "D3-OSM", "techniqueName": "Operating System Monitoring", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:OperatingSystemMonitoring"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-identify-variant", "proc-map-encryption-scope", "proc-determine-ttps", "proc-assess-data-exfil"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-variant-report"]
+      },
+      "proc-identify-variant": {
+        "id": "proc-identify-variant",
+        "name": "Identify Ransomware Variant & Affiliate",
+        "notes": "Analyze ransom note content, encrypted file extensions, hashes, and behavioral patterns to identify the ransomware family. Check if a public decryptor exists. Research the affiliate's reputation — some provide working decryptors (e.g., many do), others don't (e.g., ProLock had corruption issues with files >64MB).",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-variant-identified",
+        "associatedRoleIds": ["role-forensics"],
+        "activityImpacts": [{"id": "ai-001", "paragonId": "pg-variant-identified", "newValue": 0.85}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1486", "techniqueName": "Data Encrypted for Impact", "tactic": "Impact", "url": "https://attack.mitre.org/techniques/T1486/"}],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-variant-report"]
+      },
+      "proc-map-encryption-scope": {
+        "id": "proc-map-encryption-scope",
+        "name": "Map Full Encryption Scope",
+        "notes": "Determine which systems, file shares, databases, and endpoints have been encrypted. Identify what was NOT encrypted — these systems need immediate protection. Map the attacker's lateral movement paths to understand full compromise scope.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-encryption-scope-known",
+        "associatedRoleIds": ["role-forensics", "role-sysadmin"],
+        "activityImpacts": [{"id": "ai-002", "paragonId": "pg-encryption-scope-known", "newValue": 0.8}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1021", "techniqueName": "Remote Services", "tactic": "Lateral Movement", "url": "https://attack.mitre.org/techniques/T1021/"}],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-determine-ttps": {
+        "id": "proc-determine-ttps",
+        "name": "Determine Attacker TTPs",
+        "notes": "Identify tools used by threat actors: Cobalt Strike and similar C2 frameworks leave extensive forensic artifacts. Map the full attack chain: initial access, privilege escalation, lateral movement, and deployment method. This intelligence is critical for both containment and post-incident prevention.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-forensics"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1059", "techniqueName": "Command and Scripting Interpreter", "tactic": "Execution", "url": "https://attack.mitre.org/techniques/T1059/"}, {"techniqueId": "T1055", "techniqueName": "Process Injection", "tactic": "Defense Evasion", "url": "https://attack.mitre.org/techniques/T1055/"}],
+        "mitreDefend": [{"techniqueId": "D3-MA", "techniqueName": "Memory Analysis", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:MemoryAnalysis"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-assess-data-exfil": {
+        "id": "proc-assess-data-exfil",
+        "name": "Assess Data Exfiltration",
+        "notes": "Determine whether data was exfiltrated before encryption (double extortion). Check for evidence of uploads to MEGA, DropMeFiles, MediaFire, or other cloud services. Exfiltration evidence affects negotiation posture, legal obligations, and notification requirements.",
+        "objectives": ["INVESTIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-forensics", "role-legal"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1567", "techniqueName": "Exfiltration Over Web Service", "tactic": "Exfiltration", "url": "https://attack.mitre.org/techniques/T1567/"}, {"techniqueId": "T1041", "techniqueName": "Exfiltration Over C2 Channel", "tactic": "Exfiltration", "url": "https://attack.mitre.org/techniques/T1041/"}],
+        "mitreDefend": [{"techniqueId": "D3-NTA", "techniqueName": "Network Traffic Analysis", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:NetworkTrafficAnalysis"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-exfil-assessment"]
+      },
+      "proc-contain-post-encrypt": {
+        "id": "proc-contain-post-encrypt",
+        "name": "Containment (Post-Encryption)",
+        "notes": "Even after encryption, containment is critical. Threat actors may still have active access. Block all C2 channels, isolate the entire network from the internet (justified when attackers spent extended time inside), block remote access tools, and rotate all credentials.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-commander", "role-sysadmin"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [{"techniqueId": "D3-NI", "techniqueName": "Network Isolation", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:NetworkIsolation"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-full-network-isolation", "proc-block-c2-post", "proc-block-all-remote-access", "proc-rotate-all-credentials"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-variant-report"],
+        "resultArtifactInStateIds": []
+      },
+      "proc-full-network-isolation": {
+        "id": "proc-full-network-isolation",
+        "name": "Full Network Isolation from Internet",
+        "notes": "With the network already encrypted and threat actors having spent extended time inside, isolating the whole network from the internet is justified. This prevents further C2 communication, additional tool download, and continued data exfiltration.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-lateral-blocked",
+        "associatedRoleIds": ["role-sysadmin"],
+        "activityImpacts": [{"id": "ai-003", "paragonId": "pg-lateral-blocked", "newValue": 0.92}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [{"techniqueId": "D3-NI", "techniqueName": "Network Isolation", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:NetworkIsolation"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-block-c2-post": {
+        "id": "proc-block-c2-post",
+        "name": "Block All C2 Communications",
+        "notes": "Block all identified C2 servers at firewall and DNS level. Check for scheduled tasks that may launch alternative backdoors with different C2 servers. Without C2, the threat actors cannot issue further commands.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-c2-blocked",
+        "associatedRoleIds": ["role-sysadmin"],
+        "activityImpacts": [{"id": "ai-004", "paragonId": "pg-c2-blocked", "newValue": 0.9}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1071", "techniqueName": "Application Layer Protocol", "tactic": "Command and Control", "url": "https://attack.mitre.org/techniques/T1071/"}],
+        "mitreDefend": [{"techniqueId": "D3-DNSDL", "techniqueName": "DNS Denylisting", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:DNSDenylisting"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-block-all-remote-access": {
+        "id": "proc-block-all-remote-access",
+        "name": "Block All Remote Access Tools",
+        "notes": "Block all legitimate remote access applications that ransomware affiliates commonly use: TeamViewer, AnyDesk, Supremo, Remote Utilities, Atera RMM, Splashtop, ScreenConnect. These provide fallback access even after C2 is blocked.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-sysadmin"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1219", "techniqueName": "Remote Access Software", "tactic": "Command and Control", "url": "https://attack.mitre.org/techniques/T1219/"}],
+        "mitreDefend": [{"techniqueId": "D3-EAL", "techniqueName": "Executable Allowlisting", "tactic": "Harden", "url": "https://d3fend.mitre.org/technique/d3f:ExecutableAllowlisting"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-rotate-all-credentials": {
+        "id": "proc-rotate-all-credentials",
+        "name": "Rotate All Compromised Credentials",
+        "notes": "Assume all domain credentials are compromised after full network encryption. Reset passwords for all accounts — especially domain admins, service accounts, and backup accounts. Threat actors love obtaining elevated credentials and valid accounts.",
+        "objectives": ["MITIGATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-credentials-rotated",
+        "associatedRoleIds": ["role-sysadmin"],
+        "activityImpacts": [{"id": "ai-005", "paragonId": "pg-credentials-rotated", "newValue": 0.88}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1078", "techniqueName": "Valid Accounts", "tactic": "Persistence", "url": "https://attack.mitre.org/techniques/T1078/"}, {"techniqueId": "T1003", "techniqueName": "OS Credential Dumping", "tactic": "Credential Access", "url": "https://attack.mitre.org/techniques/T1003/"}],
+        "mitreDefend": [{"techniqueId": "D3-CR", "techniqueName": "Credential Rotation", "tactic": "Harden", "url": "https://d3fend.mitre.org/technique/d3f:CredentialRotation"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-recovery-decision": {
+        "id": "proc-recovery-decision",
+        "name": "Recovery Decision & Execution",
+        "notes": "Two primary choices: (1) Negotiate with threat actors and pay ransom, or (2) Rebuild infrastructure from scratch. Paying ransom is risky — decryptors may not work properly (ProLock example: corrupted files >64MB), and organizations that pay are often targeted again. Rebuilding is safer but takes longer.",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-commander", "role-legal", "role-sysadmin"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-evaluate-ransom", "proc-rebuild-infrastructure", "proc-eradicate-malware"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-exfil-assessment"],
+        "resultArtifactInStateIds": ["asi-recovery-complete"]
+      },
+      "proc-evaluate-ransom": {
+        "id": "proc-evaluate-ransom",
+        "name": "Evaluate Ransom Payment Decision",
+        "notes": "Consider: Does the affiliate provide working decryptors? (Research reputation.) Are backups available? What is the business impact of extended downtime? RISKS: Decryptors may corrupt data (ProLock corrupted files >64MB). Organizations that pay are often attacked again. Payment funds criminal enterprise. Legal and regulatory implications may apply.",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-commander", "role-legal"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-rebuild-infrastructure": {
+        "id": "proc-rebuild-infrastructure",
+        "name": "Rebuild Infrastructure from Scratch",
+        "notes": "If backups are available and clean, or if ransom payment is rejected: rebuild the entire infrastructure. Reimage all encrypted endpoints from gold images. Restore data from verified clean backups. Rebuild Active Directory if compromised. This is the safer path — eliminates any hidden persistence.",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-infrastructure-restored",
+        "associatedRoleIds": ["role-sysadmin"],
+        "activityImpacts": [{"id": "ai-006", "paragonId": "pg-infrastructure-restored", "newValue": 0.9}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-recovery-complete"]
+      },
+      "proc-eradicate-malware": {
+        "id": "proc-eradicate-malware",
+        "name": "Eradicate Malware & Persistence",
+        "notes": "Remove all ransomware artifacts, persistence mechanisms (registry run keys, Windows services, scheduled tasks), attacker tools, and remote access software. Handle fileless malware in memory. Verify hosts are clean before returning to production — if uncertain, reimage.",
+        "objectives": ["REMEDIATION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-forensics", "role-sysadmin"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1547.001", "techniqueName": "Registry Run Keys / Startup Folder", "tactic": "Persistence", "url": "https://attack.mitre.org/techniques/T1547/001/"}, {"techniqueId": "T1543.003", "techniqueName": "Windows Service", "tactic": "Persistence", "url": "https://attack.mitre.org/techniques/T1543/003/"}, {"techniqueId": "T1053.005", "techniqueName": "Scheduled Task", "tactic": "Persistence", "url": "https://attack.mitre.org/techniques/T1053/005/"}],
+        "mitreDefend": [{"techniqueId": "D3-PSA", "techniqueName": "Process Spawn Analysis", "tactic": "Detect", "url": "https://d3fend.mitre.org/technique/d3f:ProcessSpawnAnalysis"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-post-incident": {
+        "id": "proc-post-incident",
+        "name": "Post-Incident Activity & Lessons Learned",
+        "notes": "Determine WHY the threat actors managed to successfully breach the organization and achieve their goals, and WHAT to do to avoid similar situations in the future. Especially critical after successful attacks — if the organization paid ransom, improving security posture is essential to prevent re-attack.",
+        "objectives": ["PREVENTION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-commander", "role-forensics"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": ["ref-001"],
+        "mitreTechniques": [],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": ["proc-root-cause-analysis", "proc-initial-access-remediation", "proc-security-controls-tuning", "proc-backup-protection"],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": ["asi-recovery-complete"],
+        "resultArtifactInStateIds": ["asi-lessons-report"]
+      },
+      "proc-root-cause-analysis": {
+        "id": "proc-root-cause-analysis",
+        "name": "Root Cause & Initial Access Analysis",
+        "notes": "Determine the root cause and initial access vector. Common findings: exposed RDP servers (recommendation: implement MFA or alternative remote access), unpatched public-facing vulnerabilities allowing credential theft or RCE (recommendation: patch all), spear phishing (recommendation: email sandboxing, personnel training). The answer drives all subsequent recommendations.",
+        "objectives": ["PREVENTION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-forensics"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1133", "techniqueName": "External Remote Services", "tactic": "Initial Access", "url": "https://attack.mitre.org/techniques/T1133/"}, {"techniqueId": "T1190", "techniqueName": "Exploit Public-Facing Application", "tactic": "Initial Access", "url": "https://attack.mitre.org/techniques/T1190/"}, {"techniqueId": "T1566", "techniqueName": "Phishing", "tactic": "Initial Access", "url": "https://attack.mitre.org/techniques/T1566/"}],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-initial-access-remediation": {
+        "id": "proc-initial-access-remediation",
+        "name": "Remediate Initial Access Vector",
+        "notes": "Based on root cause: If exposed RDP — implement MFA for RDP connections or choose other remote access methods. If unpatched vulnerabilities — patch all public-facing systems, especially those allowing credential theft or remote code execution. If spear phishing — implement malware detonation systems (advanced sandboxes analyzing attachments and links in incoming/outgoing email), provide additional personnel training.",
+        "objectives": ["PREVENTION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-sysadmin", "role-commander"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1133", "techniqueName": "External Remote Services", "tactic": "Initial Access", "url": "https://attack.mitre.org/techniques/T1133/"}, {"techniqueId": "T1566", "techniqueName": "Phishing", "tactic": "Initial Access", "url": "https://attack.mitre.org/techniques/T1566/"}],
+        "mitreDefend": [{"techniqueId": "D3-MFA", "techniqueName": "Multi-factor Authentication", "tactic": "Harden", "url": "https://d3fend.mitre.org/technique/d3f:Multi-factorAuthentication"}, {"techniqueId": "D3-ER", "techniqueName": "Email Removal", "tactic": "Isolate", "url": "https://d3fend.mitre.org/technique/d3f:EmailRemoval"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-security-controls-tuning": {
+        "id": "proc-security-controls-tuning",
+        "name": "Tune/Replace Internal Security Controls",
+        "notes": "Based on observed TTPs: in some cases security products just need proper tuning; in others, they need to be replaced entirely. May require more monitoring capabilities and additional personnel who need to be trained. Each TTP finding from the investigation should result in a tuned security control.",
+        "objectives": ["PREVENTION"],
+        "actionType": "MANUAL",
+        "paragonId": "pg-security-posture-improved",
+        "associatedRoleIds": ["role-commander", "role-sysadmin"],
+        "activityImpacts": [{"id": "ai-007", "paragonId": "pg-security-posture-improved", "newValue": 0.8}],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [],
+        "mitreDefend": [],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": []
+      },
+      "proc-backup-protection": {
+        "id": "proc-backup-protection",
+        "name": "Improve Backup Protection",
+        "notes": "If backups were deleted (common threat actor strategy): implement the 3-2-1 rule (3 copies, 2 different media types, 1 offsite/offline), use separate dedicated accounts for accessing backup servers, implement multi-factor authentication for any type of backup access. This is the last line of defense against ransomware.",
+        "objectives": ["PREVENTION"],
+        "actionType": "MANUAL",
+        "paragonId": null,
+        "associatedRoleIds": ["role-sysadmin"],
+        "activityImpacts": [],
+        "externalReferences": [],
+        "relatedReferenceIds": [],
+        "mitreTechniques": [{"techniqueId": "T1490", "techniqueName": "Inhibit System Recovery", "tactic": "Impact", "url": "https://attack.mitre.org/techniques/T1490/"}],
+        "mitreDefend": [{"techniqueId": "D3-MFA", "techniqueName": "Multi-factor Authentication", "tactic": "Harden", "url": "https://d3fend.mitre.org/technique/d3f:Multi-factorAuthentication"}],
+        "status": "UNSPECIFIED",
+        "startDate": null,
+        "endDate": null,
+        "subProcessIds": [],
+        "resourceIds": [],
+        "resourceUsedIds": [],
+        "artifactInStateUsedIds": [],
+        "resultArtifactInStateIds": ["asi-lessons-report"]
+      }
+    },
+    "artifacts": {
+      "art-variant-report": {
+        "id": "art-variant-report",
+        "name": "Ransomware Variant & TTP Report",
+        "stateIds": ["as-variant-pending", "as-variant-identified"]
+      },
+      "art-exfil-assessment": {
+        "id": "art-exfil-assessment",
+        "name": "Data Exfiltration Assessment",
+        "stateIds": ["as-exfil-unknown", "as-exfil-assessed"]
+      },
+      "art-recovery-status": {
+        "id": "art-recovery-status",
+        "name": "Recovery Status Report",
+        "stateIds": ["as-recovery-pending", "as-recovery-complete"]
+      },
+      "art-lessons-report": {
+        "id": "art-lessons-report",
+        "name": "Post-Incident Lessons Learned Report",
+        "stateIds": ["as-lessons-draft", "as-lessons-final"]
+      }
+    },
+    "artifactStates": {
+      "as-variant-pending": {
+        "id": "as-variant-pending",
+        "name": "pending identification",
+        "artifactName": "Ransomware Variant & TTP Report",
+        "achievedStatus": false,
+        "instanceIds": []
+      },
+      "as-variant-identified": {
+        "id": "as-variant-identified",
+        "name": "identified",
+        "artifactName": "Ransomware Variant & TTP Report",
+        "achievedStatus": false,
+        "instanceIds": ["asi-variant-report"]
+      },
+      "as-exfil-unknown": {
+        "id": "as-exfil-unknown",
+        "name": "unknown",
+        "artifactName": "Data Exfiltration Assessment",
+        "achievedStatus": false,
+        "instanceIds": []
+      },
+      "as-exfil-assessed": {
+        "id": "as-exfil-assessed",
+        "name": "assessed",
+        "artifactName": "Data Exfiltration Assessment",
+        "achievedStatus": false,
+        "instanceIds": ["asi-exfil-assessment"]
+      },
+      "as-recovery-pending": {
+        "id": "as-recovery-pending",
+        "name": "pending",
+        "artifactName": "Recovery Status Report",
+        "achievedStatus": false,
+        "instanceIds": []
+      },
+      "as-recovery-complete": {
+        "id": "as-recovery-complete",
+        "name": "complete",
+        "artifactName": "Recovery Status Report",
+        "achievedStatus": false,
+        "instanceIds": ["asi-recovery-complete"]
+      },
+      "as-lessons-draft": {
+        "id": "as-lessons-draft",
+        "name": "draft",
+        "artifactName": "Post-Incident Lessons Learned Report",
+        "achievedStatus": false,
+        "instanceIds": []
+      },
+      "as-lessons-final": {
+        "id": "as-lessons-final",
+        "name": "finalized",
+        "artifactName": "Post-Incident Lessons Learned Report",
+        "achievedStatus": false,
+        "instanceIds": ["asi-lessons-report"]
+      }
+    },
+    "artifactStateInstances": {
+      "asi-variant-report": {
+        "id": "asi-variant-report",
+        "originatingActivity": "proc-identify-variant",
+        "usedByActivity": "proc-contain-post-encrypt"
+      },
+      "asi-exfil-assessment": {
+        "id": "asi-exfil-assessment",
+        "originatingActivity": "proc-assess-data-exfil",
+        "usedByActivity": "proc-recovery-decision"
+      },
+      "asi-recovery-complete": {
+        "id": "asi-recovery-complete",
+        "originatingActivity": "proc-rebuild-infrastructure",
+        "usedByActivity": "proc-post-incident"
+      },
+      "asi-lessons-report": {
+        "id": "asi-lessons-report",
+        "originatingActivity": "proc-backup-protection",
+        "usedByActivity": null
+      }
+    },
+    "actuators": {
+      "act-edr": {
+        "id": "act-edr",
+        "name": "EDR Platform",
+        "actuatorType": "MACHINE"
+      },
+      "act-firewall": {
+        "id": "act-firewall",
+        "name": "Network Firewall",
+        "actuatorType": "MACHINE"
+      },
+      "act-backup": {
+        "id": "act-backup",
+        "name": "Backup Infrastructure",
+        "actuatorType": "MACHINE"
+      },
+      "act-siem": {
+        "id": "act-siem",
+        "name": "SIEM Platform",
+        "actuatorType": "MACHINE"
+      }
+    },
+    "externalReferences": {
+      "ref-001": {
+        "id": "ref-001",
+        "name": "NIST SP 800-61r2 Computer Security Incident Handling Guide",
+        "referenceType": "BEST_PRACTICE"
+      },
+      "ref-002": {
+        "id": "ref-002",
+        "name": "CISA Ransomware Guide",
+        "referenceType": "BEST_PRACTICE"
+      }
+    },
+    "roles": {
+      "role-analyst": {"id": "role-analyst", "name": "SOC Analyst"},
+      "role-commander": {"id": "role-commander", "name": "Incident Commander"},
+      "role-forensics": {"id": "role-forensics", "name": "Forensics Lead"},
+      "role-sysadmin": {"id": "role-sysadmin", "name": "System Administrator"},
+      "role-legal": {"id": "role-legal", "name": "Legal Counsel"}
+    },
+    "symbiosis": {
+      "businessObjectives": {
+        "bo-001": {
+          "id": "bo-001",
+          "scope": "Entire encrypted infrastructure and affected business operations",
+          "purpose": "Restore business operations and data availability after successful ransomware encryption",
+          "viewpoint": "Business Recovery and Continuity",
+          "context": "Full encryption has halted operations; recovery path must balance speed, cost, and risk of re-attack",
+          "relatedObjectiveIds": ["bo-002", "bo-003"],
+          "paragonId": null
+        },
+        "bo-002": {
+          "id": "bo-002",
+          "scope": "Organizational security posture and controls",
+          "purpose": "Prevent recurrence by addressing root cause and hardening defenses",
+          "viewpoint": "Security Improvement",
+          "context": "Organizations that pay ransom are frequently targeted again; security posture must improve regardless of recovery path chosen",
+          "relatedObjectiveIds": ["bo-001", "bo-003"],
+          "paragonId": null
+        },
+        "bo-003": {
+          "id": "bo-003",
+          "scope": "Data integrity and backup systems",
+          "purpose": "Ensure reliable data recovery capability independent of threat actor cooperation",
+          "viewpoint": "Disaster Recovery",
+          "context": "Decryptors may not work (ProLock example); backups are the only guaranteed recovery path",
+          "relatedObjectiveIds": ["bo-001"],
+          "paragonId": null
+        }
+      },
+      "securityMeasurementGoals": {
+        "smg-001": {
+          "id": "smg-001",
+          "viewpoint": "IT Service Management",
+          "context": "Recovery time directly determines business impact magnitude after encryption",
+          "scope": "All encrypted systems and services",
+          "purpose": "Measure and minimize time to full operational recovery",
+          "focus": "Time from encryption event to full service restoration",
+          "criteria": "Critical services restored within RTO; full recovery within 72 hours",
+          "businessObjectiveIds": ["bo-001"],
+          "paragonId": null
+        },
+        "smg-002": {
+          "id": "smg-002",
+          "viewpoint": "Security Operations",
+          "context": "Post-encryption, threat actors may still be present and active",
+          "scope": "All network segments and endpoints",
+          "purpose": "Verify complete threat actor eviction before recovery begins",
+          "focus": "Confirmation that no active threat actor access remains",
+          "criteria": "Zero indicators of active threat actor presence for 48+ hours before recovery",
+          "businessObjectiveIds": ["bo-002"],
+          "paragonId": null
+        }
+      },
+      "securityMetrics": {
+        "sm-001": {
+          "id": "sm-001",
+          "description": "Time from encryption event detection to full critical service restoration",
+          "goal": "Minimize business impact by achieving fastest possible recovery",
+          "baseMeasurementIds": ["bm-001"],
+          "method": "Track time from initial encryption alert to confirmed restoration of all critical services",
+          "measurementFunction": "restoration_timestamp - encryption_detection_timestamp",
+          "interpretation": "Sub-72h recovery indicates strong DR capability; longer durations require DR process improvement",
+          "reporting": "Post-incident report; quarterly DR readiness assessment",
+          "smgIds": ["smg-001"]
+        },
+        "sm-002": {
+          "id": "sm-002",
+          "description": "Days between containment completion and last observed indicator of threat actor activity",
+          "goal": "Ensure complete threat actor eviction before rebuilding infrastructure",
+          "baseMeasurementIds": ["bm-002"],
+          "method": "Monitor for any C2 callbacks, unauthorized access, or persistence activation after containment",
+          "measurementFunction": "days_since_last_threat_activity",
+          "interpretation": "48+ hours of silence indicates successful eviction; any activity requires re-investigation",
+          "reporting": "Daily during active response; final confirmation in incident closure report",
+          "smgIds": ["smg-002"]
+        }
+      },
+      "baseMeasurements": {
+        "bm-001": {
+          "id": "bm-001",
+          "description": "Elapsed hours from encryption detection to confirmed critical service restoration"
+        },
+        "bm-002": {
+          "id": "bm-002",
+          "description": "Days elapsed since last observed indicator of active threat actor presence"
+        }
+      },
+      "dependencyModelParagonIds": ["pg-root"]
+    }
+  },
+  "representation": {"dmViews": {}, "pbViews": {}}
+}

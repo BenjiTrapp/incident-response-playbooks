@@ -33,7 +33,7 @@ A browser-based modelling tool for designing, analysing, and executing **operati
 ### Additional
 - **Cross-DM References** — link paragons across multiple dependency models
 - **SYMBIOSIS Module** — GQM-based security measurement framework
-- **Example Library** — 11 real-world IR playbooks mapped to ATT&CK + D3FEND
+- **Example Library** — 13 real-world IR playbooks mapped to ATT&CK + D3FEND
 
 ---
 
@@ -61,6 +61,8 @@ Or deploy directly to **GitHub Pages** — no build step required.
 |------|----------|--------|--------|
 | `phishing-t1566.json` | Phishing Attack Response | T1566, T1204, T1078 | D3-ER, D3-HD, D3-DNSDL, D3-UBA |
 | `ransomware-t1486.json` | Ransomware Incident Response | T1486, T1490, T1021, T1059, T1562 | D3-NI, D3-BAN, D3-FE, D3-SYSM |
+| `ransomware-pre-catch-t1486.json` | Ransomware Pre-Deployment Catch | T1486, T1566, T1071, T1219, T1547, T1053 | D3-NI, D3-MA, D3-DNSDL, D3-CR, D3-OTF, D3-EAL |
+| `ransomware-post-encryption-t1486.json` | Ransomware Post-Encryption Response | T1486, T1490, T1567, T1219, T1078, T1133 | D3-NI, D3-CR, D3-MFA, D3-EAL, D3-DNSDL, D3-NTA |
 | `password-spraying-t1110.json` | Password Spraying Attack | T1110.003, T1078, T1087, T1021 | D3-AL, D3-MFA, D3-AAORT, D3-CRED |
 | `process-injection-t1055.json` | Process Injection Response | T1055, T1059, T1003 | D3-PSA, D3-MA, D3-EAL, D3-DLIC |
 | `drive-by-compromise-t1189.json` | Drive-by Compromise Response | T1189, T1203, T1071, T1105 | D3-WF, D3-DNSDL, D3-BI, D3-UA |

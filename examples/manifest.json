@@ -10,6 +10,16 @@
     "description": "Ransomware response playbook covering encryption impact, lateral movement containment, and backup recovery. ATT&CK: T1486, T1490, T1021. D3FEND: Network Isolation, Backup Analysis."
   },
   {
+    "filename": "ransomware-pre-catch-t1486.json",
+    "name": "Ransomware Pre-Deployment Catch (T1486)",
+    "description": "Pre-ransomware response when precursors are detected before deployment: Trickbot/BazarLoader, Cobalt Strike beacons, AD reconnaissance. Covers early containment (block C2, remote tools, exfil services), eradication of fileless malware and persistence, and post-incident root cause analysis. ATT&CK: T1486, T1566, T1071, T1219, T1547, T1053. D3FEND: Network Isolation, Memory Analysis, DNS Denylisting, Credential Rotation."
+  },
+  {
+    "filename": "ransomware-post-encryption-t1486.json",
+    "name": "Ransomware Post-Encryption Response (T1486)",
+    "description": "Response when ransomware has already encrypted the environment. Covers variant identification, full scope assessment, data exfiltration analysis, recovery decision (rebuild vs. pay ransom with ProLock-style risks), and post-incident hardening against re-attack. ATT&CK: T1486, T1490, T1567, T1219, T1078, T1133. D3FEND: Network Isolation, Credential Rotation, MFA, Executable Allowlisting."
+  },
+  {
     "filename": "password-spraying-t1110.json",
     "name": "Password Spraying Attack Response (T1110.003)",
     "description": "Identity-focused response to credential spraying attacks. ATT&CK: T1110.003, T1078, T1087. D3FEND: Account Locking, MFA, Credential Hardening."
